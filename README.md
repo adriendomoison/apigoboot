@@ -1,2 +1,2 @@
-# go-boot-api
-A Go API generator using channels and a micro service architecture
+# apigoboot
+A Go API boilplate using channels and a micro service architecture and integrating Oauth2 secured login, payment, and emails.
