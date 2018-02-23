@@ -1,4 +1,4 @@
-# apigoboot
+# apigoboot - WIP - Looking for inputs & code reviews! 🚀♥️
 
 A Go API boilplate using a micro-service architecture and integrating Oauth2 secured login, payment, and emails.
 
@@ -27,7 +27,7 @@ The errors are always using the same nomenclature.
     ]
 }
 ```
-An `Errors` array is returned composed of objects including the problematic `param` and a `detail` human readable sentence to describe each error.
+An `Errors` array is returned composed of objects including the faulty `param` and a `detail` human readable sentence to describe each error.
 
 When an error happen during the request process but that the submitted request pass the validation, a more detailed error will be returned:
 
