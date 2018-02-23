@@ -4,7 +4,10 @@ A Go API boilplate using a micro-service architecture and integrating Oauth2 sec
 
 ### Set up
 
-You need to add in your environment a `GOOGLE_LOGIN_API_CIENT_ID` and `GOOGLE_LOGIN_API_SECRET_ID` to allow oauth2 to process login with google
+You need to add 
+- `GOOGLE_LOGIN_API_CIENT_ID` and `GOOGLE_LOGIN_API_SECRET_ID` to your environment to allow oauth2 to process sign in/up with google (generated at [https://console.developers.google.com/apis/credentials/oauthclient](https://console.developers.google.com/apis/credentials/oauthclient)
+- `127.0.0.42      api.apigoboot.dev` to your `/etc/hosts`
+- `api.apigoboot.dev:4200` in the field `Site URL` of facebook developer app basic settings (create an app here: [https://developers.facebook.com/apps](https://developers.facebook.com/apps))
 
 ### Return values
 
