@@ -1,6 +1,6 @@
-apigoboot
+# apigoboot
 
-A Go API boilplate using channels and a micro service architecture and integrating Oauth2 secured login, payment, and emails.
+A Go API boilplate using a micro-service architecture and integrating Oauth2 secured login, payment, and emails.
 
 ### Return values
 
