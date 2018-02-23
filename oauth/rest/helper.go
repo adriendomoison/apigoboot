@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/RangelReale/osin"
-	userrepo "github.com/adriendomoison/go-boot-api/user/repo"
-	userservice "github.com/adriendomoison/go-boot-api/user/service"
+	userrepo "github.com/adriendomoison/gobootapi/user/repo"
+	userservice "github.com/adriendomoison/gobootapi/user/service"
 )
 
 func HandleLoginPage(ar *osin.AuthorizeRequest, c *gin.Context) (uint, bool) {

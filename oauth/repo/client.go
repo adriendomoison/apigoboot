@@ -4,8 +4,8 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
-	"github.com/adriendomoison/go-boot-api/oauth/repo/model"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
+	"github.com/adriendomoison/gobootapi/oauth/repo/model"
 )
 
 // GetClient loads the client by id

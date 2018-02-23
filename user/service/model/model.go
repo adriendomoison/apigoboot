@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/servicehelper"
-	"github.com/adriendomoison/go-boot-api/user/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
+	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
 )
 
 type Interface interface {

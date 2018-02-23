@@ -6,11 +6,11 @@ package oauth
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
-	"github.com/adriendomoison/go-boot-api/oauth/repo"
-	"github.com/adriendomoison/go-boot-api/oauth/rest"
-	"github.com/adriendomoison/go-boot-api/oauth/rest/model"
-	"github.com/adriendomoison/go-boot-api/apicore/config"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
+	"github.com/adriendomoison/gobootapi/oauth/repo"
+	"github.com/adriendomoison/gobootapi/oauth/rest"
+	"github.com/adriendomoison/gobootapi/oauth/rest/model"
+	"github.com/adriendomoison/gobootapi/apicore/config"
 )
 
 // MicroService

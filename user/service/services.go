@@ -8,10 +8,10 @@ import (
 	"errors"
 	"github.com/jinzhu/copier"
 	"github.com/elithrar/simple-scrypt"
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/servicehelper"
-	"github.com/adriendomoison/go-boot-api/user/repo/dbmodel"
-	"github.com/adriendomoison/go-boot-api/user/service/model"
-	"github.com/adriendomoison/go-boot-api/user/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
+	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/user/service/model"
+	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
 )
 
 // Make sure the interface is implemented correctly

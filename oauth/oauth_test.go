@@ -12,11 +12,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 	"github.com/elithrar/simple-scrypt"
-	"github.com/adriendomoison/go-boot-api/oauth/repo/model"
-	"github.com/adriendomoison/go-boot-api/apicore/config"
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/apihelper"
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
-	userrepomodel "github.com/adriendomoison/go-boot-api/user/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/oauth/repo/model"
+	"github.com/adriendomoison/gobootapi/apicore/config"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/apihelper"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
+	userrepomodel "github.com/adriendomoison/gobootapi/user/repo/dbmodel"
 )
 
 var URL = config.GAppUrl + "/authentication"

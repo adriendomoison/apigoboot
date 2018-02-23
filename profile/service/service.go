@@ -8,11 +8,11 @@ import (
 	"time"
 	"errors"
 	"github.com/jinzhu/copier"
-	"github.com/adriendomoison/go-boot-api/tool"
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/servicehelper"
-	"github.com/adriendomoison/go-boot-api/profile/service/model"
-	"github.com/adriendomoison/go-boot-api/profile/rest/jsonmodel"
-	"github.com/adriendomoison/go-boot-api/profile/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/tool"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
+	"github.com/adriendomoison/gobootapi/profile/service/model"
+	"github.com/adriendomoison/gobootapi/profile/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/profile/repo/dbmodel"
 )
 
 // Make sure the interface is implemented correctly

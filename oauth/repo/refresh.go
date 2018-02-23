@@ -4,8 +4,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/RangelReale/osin"
 	"github.com/go-errors/errors"
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
-	"github.com/adriendomoison/go-boot-api/oauth/repo/model"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
+	"github.com/adriendomoison/gobootapi/oauth/repo/model"
 )
 
 // LoadRefresh retrieves refresh AccessData. Client information MUST be loaded together.

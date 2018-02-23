@@ -2,9 +2,9 @@ package repo
 
 import (
 	"testing"
-	"github.com/adriendomoison/go-boot-api/user/repo/dbmodel"
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
-	"github.com/adriendomoison/go-boot-api/apicore/config"
+	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
+	"github.com/adriendomoison/gobootapi/apicore/config"
 	"os"
 )
 

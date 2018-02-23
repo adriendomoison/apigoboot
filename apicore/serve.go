@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/adriendomoison/go-boot-api/apicore/core"
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
+	"github.com/adriendomoison/gobootapi/apicore/core"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
 )
 
 func main() {

@@ -5,11 +5,11 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/go-boot-api/user/rest"
-	"github.com/adriendomoison/go-boot-api/user/repo"
-	"github.com/adriendomoison/go-boot-api/user/service"
-	"github.com/adriendomoison/go-boot-api/user/rest/jsonmodel"
-	"github.com/adriendomoison/go-boot-api/apicore/core/model"
+	"github.com/adriendomoison/gobootapi/user/rest"
+	"github.com/adriendomoison/gobootapi/user/repo"
+	"github.com/adriendomoison/gobootapi/user/service"
+	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/apicore/core/model"
 )
 
 // Make sure the interface is implemented correctly

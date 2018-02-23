@@ -4,11 +4,11 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
-	"github.com/adriendomoison/go-boot-api/oauth"
-	"github.com/adriendomoison/go-boot-api/user"
-	"github.com/adriendomoison/go-boot-api/profile"
-	"github.com/adriendomoison/go-boot-api/apicore/config"
-	"github.com/adriendomoison/go-boot-api/apicore/rest"
+	"github.com/adriendomoison/gobootapi/oauth"
+	"github.com/adriendomoison/gobootapi/user"
+	"github.com/adriendomoison/gobootapi/profile"
+	"github.com/adriendomoison/gobootapi/apicore/config"
+	"github.com/adriendomoison/gobootapi/apicore/rest"
 )
 
 // startAPI start the API and keep it alive

@@ -5,7 +5,7 @@ package rest
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/go-boot-api/apicore/config"
+	"github.com/adriendomoison/gobootapi/apicore/config"
 )
 
 // AppInfo print basic API info (API version, API name and used port)

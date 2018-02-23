@@ -5,8 +5,8 @@ package apihelper
 
 import (
 	"net/http"
-	"github.com/adriendomoison/go-boot-api/tool"
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/servicehelper"
+	"github.com/adriendomoison/gobootapi/tool"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
 	"gopkg.in/go-playground/validator.v8"
 )
 

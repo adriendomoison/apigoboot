@@ -2,12 +2,12 @@ package profile
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/go-boot-api/profile/rest"
-	_ "github.com/adriendomoison/go-boot-api/oauth/rest"
-	"github.com/adriendomoison/go-boot-api/profile/repo"
-	"github.com/adriendomoison/go-boot-api/profile/service"
-	"github.com/adriendomoison/go-boot-api/profile/rest/jsonmodel"
-	"github.com/adriendomoison/go-boot-api/apicore/core/model"
+	"github.com/adriendomoison/gobootapi/profile/rest"
+	_ "github.com/adriendomoison/gobootapi/oauth/rest"
+	"github.com/adriendomoison/gobootapi/profile/repo"
+	"github.com/adriendomoison/gobootapi/profile/service"
+	"github.com/adriendomoison/gobootapi/profile/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/apicore/core/model"
 )
 
 // Make sure the interface is implemented correctly

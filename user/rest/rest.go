@@ -3,9 +3,9 @@ package rest
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/go-boot-api/user/service/model"
-	"github.com/adriendomoison/go-boot-api/user/rest/jsonmodel"
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/apihelper"
+	"github.com/adriendomoison/gobootapi/user/service/model"
+	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/apihelper"
 )
 
 // Make sure the interface is implemented correctly

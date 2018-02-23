@@ -8,10 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/go-boot-api/apicore/config"
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/apihelper"
-	userrepo "github.com/adriendomoison/go-boot-api/user/repo"
-	userservice "github.com/adriendomoison/go-boot-api/user/service"
+	"github.com/adriendomoison/gobootapi/apicore/config"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/apihelper"
+	userrepo "github.com/adriendomoison/gobootapi/user/repo"
+	userservice "github.com/adriendomoison/gobootapi/user/service"
 )
 
 type rest struct {

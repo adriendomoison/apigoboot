@@ -1,8 +1,8 @@
 package repo
 
 import (
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
-	"github.com/adriendomoison/go-boot-api/profile/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
+	"github.com/adriendomoison/gobootapi/profile/repo/dbmodel"
 )
 
 // Make sure the interface is implemented correctly

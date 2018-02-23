@@ -3,12 +3,12 @@ package service
 import (
 	"os"
 	"testing"
-	"github.com/adriendomoison/go-boot-api/apicore/config"
-	"github.com/adriendomoison/go-boot-api/database/dbconn"
-	"github.com/adriendomoison/go-boot-api/user/repo"
-	"github.com/adriendomoison/go-boot-api/user/repo/dbmodel"
-	"github.com/adriendomoison/go-boot-api/user/rest/jsonmodel"
-	"github.com/adriendomoison/go-boot-api/apicore/helpers/servicehelper"
+	"github.com/adriendomoison/gobootapi/apicore/config"
+	"github.com/adriendomoison/gobootapi/database/dbconn"
+	"github.com/adriendomoison/gobootapi/user/repo"
+	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
 )
 
 var email = "john.doe@example.dev"
