@@ -1,13 +1,14 @@
-# apigoboot - WIP - Looking for inputs & code reviews! 🚀♥️
+# ApiGoBoot - WIP - Looking for inputs & code reviews! 🚀♥️
 
-A Go API boilplate using a micro-service architecture and integrating Oauth2 secured login, payment, and emails.
+ApiGoBoot, the boilerplate that does NOT write Java in Go.
+
 
 ### Set up
 
-You need to add 
-- `GOOGLE_LOGIN_API_CIENT_ID` and `GOOGLE_LOGIN_API_SECRET_ID` to your environment to allow oauth2 to process sign in/up with google (generated at [https://console.developers.google.com/apis/credentials/oauthclient](https://console.developers.google.com/apis/credentials/oauthclient)
-- `127.0.0.42      api.apigoboot.dev` to your `/etc/hosts`
-- `api.apigoboot.dev:4200` in the field `Site URL` of facebook developer app basic settings (create an app here: [https://developers.facebook.com/apps](https://developers.facebook.com/apps))
+- Add `GOOGLE_LOGIN_API_CIENT_ID` and `GOOGLE_LOGIN_API_SECRET_ID` to your environment to allow oauth2 to process sign in/up with google (generated at [https://console.developers.google.com/apis/credentials/oauthclient](https://console.developers.google.com/apis/credentials/oauthclient)
+- Add the line `127.0.0.42      api.apigoboot.dev` to your `/etc/hosts`
+- Create a facebook app and add `api.apigoboot.dev:4200` in the field `Site URL` in basic settings ([https://developers.facebook.com/apps](https://developers.facebook.com/apps))
+
 
 ### Return values
 
