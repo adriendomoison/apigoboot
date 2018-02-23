@@ -2,6 +2,10 @@
 
 A Go API boilplate using a micro-service architecture and integrating Oauth2 secured login, payment, and emails.
 
+### Set up
+
+You need to add in your environment a `GOOGLE_LOGIN_API_CIENT_ID` and `GOOGLE_LOGIN_API_SECRET_ID` to allow oauth2 to process login with google
+
 ### Return values
 
 The API return user friendly error message that can be printed directly client-side.
@@ -13,12 +17,12 @@ The errors are always using the same nomenclature.
         {
             "param": "last_name",
             "detail": "The field last_name is required",
-            "type": "https://api.apigoboot.com/validation-error/profile#last_name"
+            "message": "Please complete this field"
         },
         {
             "param": "email",
             "detail": "The field email is required",
-            "type": "https://api.apigoboot.com/validation-error/profile#email"
+            "message": "Please complete this field"
         }
     ]
 }
@@ -34,8 +38,8 @@ When an error happen during the request process but that the submitted request p
             "status_code": 1003,
             "title": "Operation scheduled_date malformed",
             "detail": "The field scheduled_date need to use the 2006-12-31 format",
-            "type": "https://api.apigoboot.com/validation-error/transaction#scheduled_date"
-        }
+            "message": "Please use the 2006-12-31 format"
+       }
     ]
 }
 ```
