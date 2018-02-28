@@ -27,10 +27,9 @@ func New() *MicroService {
 
 // Attach link the user micro-service with its dependencies to the system
 func (ms *MicroService) Attach(group *gin.RouterGroup) {
-	// TODO add middleware to check access token
 	group.POST("/users", ms.rest.Post)
-	group.GET("/users/:email", ms.rest.Get)
-	group.PUT("/users/:email/email", ms.rest.PutEmail)
-	group.PUT("/users/:email/password", ms.rest.PutPassword)
-	group.DELETE("/users/:email", ms.rest.Delete)
+	group.GET("/users/:email", ms.rest.ValidateAccessToken, ms.rest.Get)
+	group.PUT("/users/:email/email", ms.rest.ValidateAccessToken, ms.rest.PutEmail)
+	group.PUT("/users/:email/password", ms.rest.ValidateAccessToken, ms.rest.PutPassword)
+	group.DELETE("/users/:email", ms.rest.ValidateAccessToken, ms.rest.Delete)
 }

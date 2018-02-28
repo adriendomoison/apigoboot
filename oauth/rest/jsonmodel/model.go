@@ -1,4 +1,4 @@
-package model
+package jsonmodel
 
 import "github.com/gin-gonic/gin"
 

@@ -8,10 +8,10 @@ import (
 	"errors"
 	"github.com/jinzhu/copier"
 	"github.com/elithrar/simple-scrypt"
-	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
 	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
 	"github.com/adriendomoison/gobootapi/user/service/model"
 	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
+	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
 )
 
 // Make sure the interface is implemented correctly
@@ -48,6 +48,15 @@ func createEntityFromDTO(reqDTO jsonmodel.RequestDTO, init bool) (entity dbmodel
 		entity.Password = string(hashedPassword[:])
 	}
 	return
+}
+
+// GetResourceOwnerId ask database to retrieve a user ID from its email
+func (s *service) GetResourceOwnerId(email string) (userId uint) {
+	entity, err := s.repo.FindByEmail(email)
+	if err != nil {
+		return 0
+	}
+	return entity.ID
 }
 
 // Add set up and create a user

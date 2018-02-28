@@ -6,6 +6,7 @@ import (
 )
 
 type Interface interface {
+	GetResourceOwnerId(email string) uint
 	Add(jsonmodel.RequestDTO) (jsonmodel.ResponseDTO, *servicehelper.Error)
 	Retrieve(string) (jsonmodel.ResponseDTO, *servicehelper.Error)
 	Edit(jsonmodel.RequestDTO) (jsonmodel.ResponseDTO, *servicehelper.Error)

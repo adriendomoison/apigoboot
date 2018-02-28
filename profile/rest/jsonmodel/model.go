@@ -3,19 +3,18 @@ package jsonmodel
 import "github.com/gin-gonic/gin"
 
 type Interface interface {
-	Post(*gin.Context)
+	ValidateAccessToken(*gin.Context)
 	Get(*gin.Context)
 	Put(*gin.Context)
-	Delete(*gin.Context)
 }
 
 type RequestDTO struct {
 	PublicId          string `json:"public_id"`
-	FirstName         string `json:"first_name" binding:"required"`
-	LastName          string `json:"last_name" binding:"required"`
+	FirstName         string `json:"first_name" binding:"required,min=2"`
+	LastName          string `json:"last_name" binding:"required,min=2"`
 	Email             string `json:"email" binding:"required,email"`
 	ProfilePictureUrl string `json:"profile_picture_url"`
-	Birthday          string `json:"birthday" binding:"required"`
+	Birthday          string `json:"birthday" binding:"required,min=10"`
 	OrderAmount       uint   `json:"order_amount"`
 }
 

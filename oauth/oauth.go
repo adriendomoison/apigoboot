@@ -9,13 +9,13 @@ import (
 	"github.com/adriendomoison/gobootapi/database/dbconn"
 	"github.com/adriendomoison/gobootapi/oauth/repo"
 	"github.com/adriendomoison/gobootapi/oauth/rest"
-	"github.com/adriendomoison/gobootapi/oauth/rest/model"
+	"github.com/adriendomoison/gobootapi/oauth/rest/jsonmodel"
 	"github.com/adriendomoison/gobootapi/apicore/config"
 )
 
 // MicroService
 type MicroService struct {
-	rest model.Interface
+	rest jsonmodel.Interface
 }
 
 // New return a new micro service instance

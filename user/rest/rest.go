@@ -6,6 +6,9 @@ import (
 	"github.com/adriendomoison/gobootapi/user/service/model"
 	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
 	"github.com/adriendomoison/gobootapi/apicore/helpers/apihelper"
+	profilerepo "github.com/adriendomoison/gobootapi/profile/repo"
+	profileservice "github.com/adriendomoison/gobootapi/profile/service"
+	profilemodel "github.com/adriendomoison/gobootapi/profile/rest/jsonmodel"
 )
 
 // Make sure the interface is implemented correctly
@@ -23,14 +26,30 @@ func New(service model.Interface) *rest {
 
 // Post allows to access the service to create a user
 func (r *rest) Post(c *gin.Context) {
-	var reqDTO jsonmodel.RequestDTO
+	var reqDTO jsonmodel.RequestDTOPost
 	if err := c.BindJSON(&reqDTO); err != nil {
 		c.JSON(apihelper.BuildRequestError(err))
 	} else {
-		if resDTO, err := r.service.Add(reqDTO); err != nil {
+		// create the user
+		if _, err := r.service.Add(jsonmodel.RequestDTO{
+			Email:    reqDTO.Email,
+			Username: reqDTO.Username,
+			Password: reqDTO.Password,
+		}); err != nil {
 			c.JSON(apihelper.BuildResponseError(err))
 		} else {
-			c.JSON(http.StatusCreated, resDTO)
+			// create the user's profile
+			profile := profileservice.New(profilerepo.New())
+			if resDTO, err := profile.Add(profilemodel.RequestDTO{
+				Email:     reqDTO.Email,
+				FirstName: reqDTO.FirstName,
+				LastName:  reqDTO.LastName,
+				Birthday:  reqDTO.Birthday,
+			}); err != nil {
+				c.JSON(apihelper.BuildResponseError(err))
+			} else {
+				c.JSON(http.StatusCreated, resDTO)
+			}
 		}
 	}
 }

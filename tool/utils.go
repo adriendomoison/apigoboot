@@ -5,9 +5,9 @@ package tool
 
 import (
 	"time"
-	"math/rand"
 	"regexp"
 	"strings"
+	"math/rand"
 )
 
 // ToSnakeCase change a string to it's snake case version

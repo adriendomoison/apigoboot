@@ -8,10 +8,13 @@ import (
 	"github.com/adriendomoison/gobootapi/profile/rest/jsonmodel"
 	"github.com/adriendomoison/gobootapi/profile/repo/dbmodel"
 	"github.com/adriendomoison/gobootapi/profile/repo"
+	userdb "github.com/adriendomoison/gobootapi/user/repo"
+	userdbmodel "github.com/adriendomoison/gobootapi/user/repo/dbmodel"
 	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
 )
 
 var publicId string
+var email = "john.doe@profile.dev"
 var firstName = "John"
 var lastName = "Doe"
 var birthday = "1995-11-23"
@@ -23,10 +26,12 @@ func TestMain(m *testing.M) {
 	defer dbconn.DB.Close()
 	s = New(repo.New())
 
+	dbconn.DB.AutoMigrate(&userdbmodel.Entity{})
 	dbconn.DB.AutoMigrate(&dbmodel.Entity{})
 
 	code := m.Run()
 
+	dbconn.DB.DropTable(&userdbmodel.Entity{})
 	dbconn.DB.DropTable(&dbmodel.Entity{})
 
 	os.Exit(code)
@@ -34,16 +39,23 @@ func TestMain(m *testing.M) {
 
 func TestCreateProfile(t *testing.T) {
 
+	userDB := userdb.New()
+	userDB.Create(userdbmodel.Entity{
+		Email: email,
+		Password: "PASSWORD123",
+	})
+
 	reqDTO := jsonmodel.RequestDTO{
-		FirstName:         firstName,
-		LastName:          lastName,
-		Birthday:          birthday,
+		Email:     email,
+		FirstName: firstName,
+		LastName:  lastName,
+		Birthday:  birthday,
 	}
 
 	restDTO, err := s.Add(reqDTO)
 
 	if err != nil {
-		t.Fail()
+		t.Error(err)
 	}
 
 	publicId = restDTO.PublicId

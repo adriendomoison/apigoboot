@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"github.com/RangelReale/osin"
 	"github.com/adriendomoison/gobootapi/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth/repo/model"
+	"github.com/adriendomoison/gobootapi/oauth/repo/dbmodel"
 )
 
 // Make sure the interface is implemented correctly
@@ -17,10 +17,10 @@ type Storage struct {
 
 // New returns a new postgres storage instance.
 func New(db *sql.DB) *Storage {
-	dbconn.DB.AutoMigrate(&model.Client{})
-	dbconn.DB.AutoMigrate(&model.Authorize{})
-	dbconn.DB.AutoMigrate(&model.Access{})
-	dbconn.DB.AutoMigrate(&model.Refresh{})
+	dbconn.DB.AutoMigrate(&dbmodel.Client{})
+	dbconn.DB.AutoMigrate(&dbmodel.Authorize{})
+	dbconn.DB.AutoMigrate(&dbmodel.Access{})
+	dbconn.DB.AutoMigrate(&dbmodel.Refresh{})
 	return &Storage{db}
 }
 

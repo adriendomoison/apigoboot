@@ -2,8 +2,8 @@ package profile
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/gobootapi/profile/rest"
 	_ "github.com/adriendomoison/gobootapi/oauth/rest"
+	"github.com/adriendomoison/gobootapi/profile/rest"
 	"github.com/adriendomoison/gobootapi/profile/repo"
 	"github.com/adriendomoison/gobootapi/profile/service"
 	"github.com/adriendomoison/gobootapi/profile/rest/jsonmodel"
@@ -25,9 +25,6 @@ func New() *MicroService {
 
 // Attach link the profile micro-service with its dependencies to the system
 func (ms *MicroService) Attach(group *gin.RouterGroup) {
-	// TODO add middleware to check access token
-	group.POST("/profiles", ms.rest.Post)
-	group.GET("/profiles/:public_id", ms.rest.Get)
-	group.PUT("/profiles/:email", ms.rest.Put)
-	group.DELETE("/profiles/:public_id", ms.rest.Delete)
+	group.GET("/profiles/:public_id", ms.rest.ValidateAccessToken, ms.rest.Get)
+	group.PUT("/profiles/:email", ms.rest.ValidateAccessToken, ms.rest.Put)
 }

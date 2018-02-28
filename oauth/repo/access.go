@@ -5,13 +5,13 @@ import (
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
 	"github.com/adriendomoison/gobootapi/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth/repo/model"
+	"github.com/adriendomoison/gobootapi/oauth/repo/dbmodel"
 )
 
 // SaveAccess writes AccessData.
 // If RefreshToken is not blank, it must save in a way that can be loaded using LoadRefresh.
 func (s *Storage) SaveAccess(data *osin.AccessData) (err error) {
-	var access model.Access
+	var access dbmodel.Access
 	prev := ""
 	authorizeData := &osin.AuthorizeData{}
 
@@ -66,7 +66,7 @@ func (s *Storage) SaveAccess(data *osin.AccessData) (err error) {
 func (s *Storage) LoadAccess(code string) (*osin.AccessData, error) {
 	var userId uint
 	var result osin.AccessData
-	var access model.Access
+	var access dbmodel.Access
 
 	if err := dbconn.DB.Where("code = ?", code).Find(&access).Error; err != nil {
 		return nil, err
@@ -88,5 +88,5 @@ func (s *Storage) LoadAccess(code string) (*osin.AccessData, error) {
 
 // RemoveAccess revokes or deletes an AccessData.
 func (s *Storage) RemoveAccess(code string) (err error) {
-	return dbconn.DB.Where("access_token = ?", code).Delete(&model.Access{}).Error
+	return dbconn.DB.Where("access_token = ?", code).Delete(&dbmodel.Access{}).Error
 }

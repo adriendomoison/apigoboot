@@ -155,7 +155,7 @@ func (r *rest) AppAuthCode(c *gin.Context) {
 	cururl.RawQuery = curq.Encode()
 	c.JSON(http.StatusOK, gin.H{
 		"state": c.Query("state"),
-		"code": c.Query("code"),
+		"code":  c.Query("code"),
 	})
 }
 
@@ -173,6 +173,10 @@ func (r *rest) AppAuthPassword(c *gin.Context) {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
 	}
+
+	// Encode credentials to escape special characters
+	cc.Username = url.QueryEscape(cc.Username)
+	cc.Password = url.QueryEscape(cc.Password)
 
 	jr := make(map[string]interface{})
 
@@ -211,6 +215,10 @@ func (r *rest) AppAuthClientCredentials(c *gin.Context) {
 		return
 	}
 
+	// Encode credentials to escape special characters
+	cc.Username = url.QueryEscape(cc.Username)
+	cc.Password = url.QueryEscape(cc.Password)
+
 	jr := make(map[string]interface{})
 
 	// build access code url
@@ -245,6 +253,10 @@ func (r *rest) AppAuthAssertion(c *gin.Context) {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
 	}
+
+	// Encode credentials to escape special characters
+	cc.Username = url.QueryEscape(cc.Username)
+	cc.Password = url.QueryEscape(cc.Password)
 
 	jr := make(map[string]interface{})
 
@@ -283,6 +295,10 @@ func (r *rest) AppAuthRefresh(c *gin.Context) {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
 	}
+
+	// Encode credentials to escape special characters
+	cc.Username = url.QueryEscape(cc.Username)
+	cc.Password = url.QueryEscape(cc.Password)
 
 	code := c.Query("code")
 
@@ -329,6 +345,10 @@ func (r *rest) AppAuthInfo(c *gin.Context) {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
 	}
+
+	// Encode credentials to escape special characters
+	cc.Username = url.QueryEscape(cc.Username)
+	cc.Password = url.QueryEscape(cc.Password)
 
 	code := c.Query("code")
 

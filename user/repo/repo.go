@@ -3,6 +3,7 @@ package repo
 import (
 	"github.com/adriendomoison/gobootapi/database/dbconn"
 	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
+	profiledbmodel "github.com/adriendomoison/gobootapi/profile/repo/dbmodel"
 )
 
 // Make sure the interface is implemented correctly
@@ -27,7 +28,33 @@ func (repo *repo) Create(user dbmodel.Entity) bool {
 	return !dbconn.DB.NewRecord(user)
 }
 
-// FindByID Find user in Database by ID
+func (repo *repo) CreateWithProfile(user dbmodel.Entity, profile profiledbmodel.Entity) error {
+	tx := dbconn.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	if err := tx.Create(&user).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	if err := tx.Create(&profile).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
+}
+
+
+// FindByID find user in Database by ID
 func (repo *repo) FindByID(id uint) (user dbmodel.Entity, err error) {
 	if err = dbconn.DB.Where("id = ?", id).First(&user).Error; err != nil {
 		return dbmodel.Entity{}, err
@@ -35,7 +62,7 @@ func (repo *repo) FindByID(id uint) (user dbmodel.Entity, err error) {
 	return user, nil
 }
 
-// FindByEmail Find user in Database by email
+// FindByEmail find user in Database by email
 func (repo *repo) FindByEmail(email string) (user dbmodel.Entity, err error) {
 	if err = dbconn.DB.Where("email = ?", email).First(&user).Error; err != nil {
 		return dbmodel.Entity{}, err

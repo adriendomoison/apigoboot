@@ -27,7 +27,7 @@ func (crud *repo) Create(profile dbmodel.Entity) bool {
 	return !dbconn.DB.NewRecord(profile)
 }
 
-// FindByID Find profile in Database by ID
+// FindByID find profile in Database by ID
 func (crud *repo) FindByID(id uint) (profile dbmodel.Entity, err error) {
 	if err = dbconn.DB.Where("id = ?", id).First(&profile).Error; err != nil {
 		return dbmodel.Entity{}, err
@@ -35,7 +35,7 @@ func (crud *repo) FindByID(id uint) (profile dbmodel.Entity, err error) {
 	return profile, nil
 }
 
-// FindByPublicId Find profile in Database by public_id
+// FindByPublicId find profile in Database by public_id
 func (crud *repo) FindByPublicId(publicId string) (profile dbmodel.Entity, err error) {
 	if err = dbconn.DB.Where("public_id = ?", publicId).First(&profile).Error; err != nil {
 		return dbmodel.Entity{}, err

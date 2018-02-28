@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 	"github.com/elithrar/simple-scrypt"
-	"github.com/adriendomoison/gobootapi/oauth/repo/model"
+	"github.com/adriendomoison/gobootapi/oauth/repo/dbmodel"
 	"github.com/adriendomoison/gobootapi/apicore/config"
 	"github.com/adriendomoison/gobootapi/apicore/helpers/apihelper"
 	"github.com/adriendomoison/gobootapi/database/dbconn"
@@ -51,10 +51,10 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 
 	dbconn.DB.DropTable(&userrepomodel.Entity{})
-	dbconn.DB.DropTable(&model.Authorize{})
-	dbconn.DB.DropTable(&model.Client{})
-	dbconn.DB.DropTable(&model.Access{})
-	dbconn.DB.DropTable(&model.Refresh{})
+	dbconn.DB.DropTable(&dbmodel.Authorize{})
+	dbconn.DB.DropTable(&dbmodel.Client{})
+	dbconn.DB.DropTable(&dbmodel.Access{})
+	dbconn.DB.DropTable(&dbmodel.Refresh{})
 
 	os.Exit(code)
 }
@@ -67,7 +67,7 @@ func createClient() {
 		Password: string(hashedPassword[:]),
 		Username: "adrien",
 	})
-	dbconn.DB.Create(&model.Client{
+	dbconn.DB.Create(&dbmodel.Client{
 		Id:          "apigoboot",
 		Secret:      "apigoboot",
 		RedirectUri: "http://api.apigoboot.dev:4200/authentication/oauth2/code",

@@ -21,20 +21,6 @@ func New(service model.Interface) *rest {
 	return &rest{service}
 }
 
-// Post allows to access the service to create a profile
-func (r *rest) Post(c *gin.Context) {
-	var reqDTO jsonmodel.RequestDTO
-	if err := c.Bind(&reqDTO); err != nil {
-		c.JSON(apihelper.BuildRequestError(err))
-	} else {
-		if resDTO, Err := r.service.Add(reqDTO); Err != nil {
-			c.JSON(apihelper.BuildResponseError(Err))
-		} else {
-			c.JSON(http.StatusCreated, resDTO)
-		}
-	}
-}
-
 // Get allows to access the service to retrieve a profile when sending its public_id
 func (r *rest) Get(c *gin.Context) {
 	if resDTO, err := r.service.Retrieve(c.Param("profile_public_id")); err != nil {
