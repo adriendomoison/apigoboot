@@ -3,33 +3,79 @@ package service
 import (
 	"os"
 	"testing"
-	"github.com/adriendomoison/gobootapi/apicore/config"
-	"github.com/adriendomoison/gobootapi/database/dbconn"
-	"github.com/adriendomoison/gobootapi/user/repo"
-	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
-	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
-	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
+	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
+	"github.com/adriendomoison/gobootapi/user-micro-service/config"
+	"github.com/adriendomoison/gobootapi/user-micro-service/database/dbconn"
+	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/rest"
 )
 
 var email = "john.doe@example.dev"
 var password = "mySecretPassword"
 var s *service
 
+// Make sure the interface is implemented correctly
+var _ RepoInterface = (*repo)(nil)
+
+// Implement interface
+type repo struct {
+	repo RepoInterface
+}
+
+// New return a new repo instance
+func NewRepoMock() *repo {
+	dbconn.DB.AutoMigrate(&Entity{})
+	return &repo{}
+}
+
+// Create create a user in Database
+func (repo *repo) Create(user Entity) bool {
+	if dbconn.DB.NewRecord(user) {
+		dbconn.DB.Create(&user)
+	}
+	return !dbconn.DB.NewRecord(user)
+}
+
+// FindByID find user in Database by ID
+func (repo *repo) FindByID(id uint) (user Entity, err error) {
+	if err = dbconn.DB.Where("id = ?", id).First(&user).Error; err != nil {
+		return Entity{}, err
+	}
+	return user, nil
+}
+
+// FindByEmail find user in Database by email
+func (repo *repo) FindByEmail(email string) (user Entity, err error) {
+	if err = dbconn.DB.Where("email = ?", email).First(&user).Error; err != nil {
+		return Entity{}, err
+	}
+	return user, nil
+}
+
+// Update edit user in Database
+func (repo *repo) Update(user Entity) error {
+	return dbconn.DB.Save(&user).Error
+}
+
+// Delete remove user from Database
+func (repo *repo) Delete(user Entity) error {
+	return dbconn.DB.Delete(&user).Error
+}
+
 func TestMain(m *testing.M) {
 	config.SetToTestingEnv()
 	dbconn.Connect()
 	defer dbconn.DB.Close()
-	s = New(repo.New())
+	s = New(NewRepoMock())
 
 	code := m.Run()
 
-	dbconn.DB.DropTable(&dbmodel.Entity{})
+	dbconn.DB.DropTable(&Entity{})
 
 	os.Exit(code)
 }
 
 func TestAddUser(t *testing.T) {
-	reqDTO := jsonmodel.RequestDTO{
+	reqDTO := rest.RequestDTO{
 		Email:    email,
 		Password: password,
 	}
@@ -42,7 +88,7 @@ func TestAddUser(t *testing.T) {
 }
 
 func TestAddUserWithSameEmail(t *testing.T) {
-	reqDTO := jsonmodel.RequestDTO{
+	reqDTO := rest.RequestDTO{
 		Email:    email,
 		Password: password,
 	}
@@ -86,7 +132,7 @@ func TestErrorMessageOnEditUserThatDoesNotExist(t *testing.T) {
 
 	newEmail := "john.john@example.dev"
 
-	reqDTOEmail := jsonmodel.RequestDTOPutEmail{
+	reqDTOEmail := rest.RequestDTOPutEmail{
 		Email:       "toto@example.dev",
 		Password:    password,
 		NewEmail:    newEmail,
@@ -101,7 +147,7 @@ func TestErrorMessageOnEditUserThatDoesNotExist(t *testing.T) {
 		t.Errorf("Code should be: Not Found, got %s", Err.Code)
 	}
 
-	reqDTOPassword := jsonmodel.RequestDTOPutPassword{
+	reqDTOPassword := rest.RequestDTOPutPassword{
 		Email:       "toto@example.dev",
 		Password:    password,
 		NewPassword: password + "New",
@@ -123,7 +169,7 @@ func TestEditUserEmail(t *testing.T) {
 
 	newEmail := "john.john@example.dev"
 
-	reqDTO := jsonmodel.RequestDTOPutEmail{
+	reqDTO := rest.RequestDTOPutEmail{
 		Email:    email,
 		Password: password,
 		NewEmail: newEmail,
@@ -146,7 +192,7 @@ func TestEditUserEmailWithoutProvidingPassword(t *testing.T) {
 
 	newEmail := "john.fake@example.dev"
 
-	reqDTO := jsonmodel.RequestDTOPutEmail{
+	reqDTO := rest.RequestDTOPutEmail{
 		Email:    email,
 		NewEmail: newEmail,
 	}
@@ -159,7 +205,7 @@ func TestEditUserEmailWithoutProvidingPassword(t *testing.T) {
 }
 
 func TestEditUserPassword(t *testing.T) {
-	reqDTO := jsonmodel.RequestDTOPutPassword{
+	reqDTO := rest.RequestDTOPutPassword{
 		Email:       email,
 		Password:    password,
 		NewPassword: "myNewSecretPassword",
@@ -167,7 +213,7 @@ func TestEditUserPassword(t *testing.T) {
 
 	_, Err := s.EditPassword(reqDTO)
 
-	reqDTO = jsonmodel.RequestDTOPutPassword{
+	reqDTO = rest.RequestDTOPutPassword{
 		Email:       email,
 		Password:    "myNewSecretPassword",
 		NewPassword: "mySecretPassword",
@@ -181,7 +227,7 @@ func TestEditUserPassword(t *testing.T) {
 }
 
 func TestEditUserPasswordWithoutProvidingOldPassword(t *testing.T) {
-	reqDTO := jsonmodel.RequestDTOPutPassword{
+	reqDTO := rest.RequestDTOPutPassword{
 		Email:       email,
 		NewPassword: "myNewSecretPassword",
 	}

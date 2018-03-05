@@ -1,11 +1,11 @@
 package repo
 
 import (
-	"testing"
-	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
-	"github.com/adriendomoison/gobootapi/database/dbconn"
-	"github.com/adriendomoison/gobootapi/apicore/config"
 	"os"
+	"testing"
+	"github.com/adriendomoison/gobootapi/user-micro-service/config"
+	"github.com/adriendomoison/gobootapi/user-micro-service/database/dbconn"
+	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/service"
 )
 
 var r *repo
@@ -14,25 +14,26 @@ func TestMain(m *testing.M) {
 	config.SetToTestingEnv()
 	dbconn.Connect()
 	defer dbconn.DB.Close()
+
 	r = New()
 
 	code := m.Run()
 
-	dbconn.DB.DropTable(&dbmodel.Entity{})
+	dbconn.DB.DropTable(&service.Entity{})
 
 	os.Exit(code)
 }
 
 func TestRepository_Create(t *testing.T) {
-	if !r.Create(dbmodel.Entity{
+	if !r.Create(service.Entity{
 		Email:    "john@example.dev",
 		Username: "John",
 		Password: "QNDNwefwf44DfY@wDNwfEC#H4$$fNEC4H4WEw&@w4NFw$wHwf4WEwfFwSsf@As$Dsdfsdf$JsFHIWE",
 	}) {
-		t.Error("Could not create perfectly formde user")
+		t.Error("Could not create perfectly formed user")
 	}
 
-	if r.Create(dbmodel.Entity{
+	if r.Create(service.Entity{
 		Email:    "john@example.dev",
 		Username: "John",
 		Password: "QNDNwefwf44DfY@wDNwfEC#H4$$fNEC4H4WEw&@w4NFw$wHwf4WEwfFwSsf@As$Dsdfsdf$JsFHIWE",
@@ -64,7 +65,7 @@ func TestRepository_FindByEmail(t *testing.T) {
 	}
 }
 
-var entityToDelete dbmodel.Entity
+var entityToDelete service.Entity
 
 func TestRepository_Delete(t *testing.T) {
 	entityToDelete, _ = r.FindByEmail("john@example.dev")

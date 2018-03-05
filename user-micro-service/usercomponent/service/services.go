@@ -6,40 +6,58 @@ package service
 
 import (
 	"errors"
+	"github.com/jinzhu/gorm"
 	"github.com/jinzhu/copier"
 	"github.com/elithrar/simple-scrypt"
-	"github.com/adriendomoison/gobootapi/user/repo/dbmodel"
-	"github.com/adriendomoison/gobootapi/user/service/model"
-	"github.com/adriendomoison/gobootapi/user/rest/jsonmodel"
-	"github.com/adriendomoison/gobootapi/apicore/helpers/servicehelper"
+	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
+	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/rest"
 )
 
+type RepoInterface interface {
+	Create(user Entity) bool
+	FindByID(id uint) (user Entity, err error)
+	FindByEmail(email string) (user Entity, err error)
+	Update(user Entity) error
+	Delete(user Entity) error
+}
+
+type Entity struct {
+	gorm.Model
+	Email    string `gorm:"NOT NULL;UNIQUE"`
+	Username string
+	Password string `gorm:"NOT NULL"`
+}
+
+func (Entity) TableName() string {
+	return "user"
+}
+
 // Make sure the interface is implemented correctly
-var _ model.Interface = (*service)(nil)
+var _ rest.ServiceInterface = (*service)(nil)
 
 // service implement interface
 type service struct {
-	repo dbmodel.Interface
+	repo RepoInterface
 }
 
 // New return a new service instance
-func New(repo dbmodel.Interface) *service {
+func New(repo RepoInterface) *service {
 	return &service{repo}
 }
 
 // createDTOFromEntity copy all data from an entity to a Response DTO
-func createDTOFromEntity(entity dbmodel.Entity) (resDTO jsonmodel.ResponseDTO) {
+func createDTOFromEntity(entity Entity) (resDTO rest.ResponseDTO) {
 	copier.Copy(&resDTO, &entity)
 	return resDTO
 }
 
 // createEntityFromDTO copy all data from a Request DTO to an entity and initialize entity with some initialization values
-func createEntityFromDTO(reqDTO jsonmodel.RequestDTO, init bool) (entity dbmodel.Entity, error *servicehelper.Error) {
+func createEntityFromDTO(reqDTO rest.RequestDTO, init bool) (entity Entity, error *servicehelper.Error) {
 	copier.Copy(&entity, &reqDTO)
 	if init {
 		hashedPassword, err := scrypt.GenerateFromPassword([]byte(reqDTO.Password), scrypt.DefaultParams)
 		if err != nil {
-			return dbmodel.Entity{}, &servicehelper.Error{
+			return Entity{}, &servicehelper.Error{
 				Detail:  errors.New("could not hash the password"),
 				Message: "We could not create your password, please try something different",
 				Code:    servicehelper.UnexpectedError,
@@ -60,77 +78,101 @@ func (s *service) GetResourceOwnerId(email string) (userId uint) {
 }
 
 // Add set up and create a user
-func (s *service) Add(reqDTO jsonmodel.RequestDTO) (resDTO jsonmodel.ResponseDTO, error *servicehelper.Error) {
+func (s *service) Add(reqDTO rest.RequestDTO) (resDTO rest.ResponseDTO, error *servicehelper.Error) {
 	entity, Err := createEntityFromDTO(reqDTO, true)
 	if Err != nil {
-		return jsonmodel.ResponseDTO{}, Err
+		return rest.ResponseDTO{}, Err
 	} else if s.repo.Create(entity) {
 		return createDTOFromEntity(entity), error
 	}
-	return jsonmodel.ResponseDTO{}, &servicehelper.Error{Detail: errors.New("could not be created"), Code: servicehelper.AlreadyExist}
+	return rest.ResponseDTO{}, &servicehelper.Error{
+		Detail:  errors.New("user could not be created"),
+		Message: "We could not created this account because an account already use this email address",
+		Param:   "email",
+		Code:    servicehelper.AlreadyExist,
+	}
 }
 
 // Retrieve ask database to retrieve a user from its email
-func (s *service) Retrieve(email string) (resDTO jsonmodel.ResponseDTO, error *servicehelper.Error) {
+func (s *service) Retrieve(email string) (resDTO rest.ResponseDTO, error *servicehelper.Error) {
 	entity, err := s.repo.FindByEmail(email)
 	if err != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{Detail: errors.New("no result found"), Code: servicehelper.NotFound}
+		return rest.ResponseDTO{}, &servicehelper.Error{
+			Detail:  errors.New("user could not be found"),
+			Message: "We could not find any user with the provided email address",
+			Param:   "email",
+			Code:    servicehelper.NotFound,
+		}
 	}
 	return createDTOFromEntity(entity), error
 }
 
 // EditEmail check user's password and change its email
-func (s *service) EditEmail(reqDTO jsonmodel.RequestDTOPutEmail) (resDTO jsonmodel.ResponseDTO, error *servicehelper.Error) {
+func (s *service) EditEmail(reqDTO rest.RequestDTOPutEmail) (resDTO rest.ResponseDTO, error *servicehelper.Error) {
 	entity, err := s.repo.FindByEmail(reqDTO.Email)
 	if err != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{Detail: errors.New("no result found"), Code: servicehelper.NotFound}
+		return rest.ResponseDTO{}, &servicehelper.Error{
+			Detail:  errors.New("user could not be found"),
+			Message: "We could not find any user with the provided email address",
+			Param:   "email",
+			Code:    servicehelper.NotFound,
+		}
 	}
 
 	if _, err := s.repo.FindByEmail(reqDTO.NewEmail); err == nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{
+		return rest.ResponseDTO{}, &servicehelper.Error{
 			Detail:  errors.New("this email is already used for another account"),
 			Message: "Email already used, please chose another email",
 			Param:   "new_email",
-			Code:    servicehelper.AlreadyExist}
+			Code:    servicehelper.AlreadyExist,
+		}
 	}
 
 	if err := scrypt.CompareHashAndPassword([]byte(entity.Password), []byte(reqDTO.Password)); err != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{
+		return rest.ResponseDTO{}, &servicehelper.Error{
 			Detail:  errors.New("invalid password"),
 			Message: "We could not authenticate you, please type you password again",
 			Param:   "password",
-			Code:    servicehelper.BadRequest}
+			Code:    servicehelper.BadRequest,
+		}
 	}
 	entity.Email = reqDTO.NewEmail
 
 	if err := s.repo.Update(entity); err != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{
+		return rest.ResponseDTO{}, &servicehelper.Error{
 			Detail:  errors.New("could not update user"),
 			Message: "We could not update the email of this account, please contact us or try again later",
-			Code:    servicehelper.UnexpectedError}
+			Code:    servicehelper.UnexpectedError,
+		}
 	}
 
 	return createDTOFromEntity(entity), error
 }
 
 // EditPassword check user password and overwrite it with a new one
-func (s *service) EditPassword(reqDTO jsonmodel.RequestDTOPutPassword) (resDTO jsonmodel.ResponseDTO, error *servicehelper.Error) {
+func (s *service) EditPassword(reqDTO rest.RequestDTOPutPassword) (resDTO rest.ResponseDTO, error *servicehelper.Error) {
 	entity, err := s.repo.FindByEmail(reqDTO.Email)
 	if err != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{Detail: errors.New("no result found"), Code: servicehelper.NotFound}
+		return rest.ResponseDTO{}, &servicehelper.Error{
+			Detail:  errors.New("user could not be found"),
+			Message: "We could not find any user with the provided email address",
+			Param:   "email",
+			Code:    servicehelper.NotFound,
+		}
 	}
 
 	if scrypt.CompareHashAndPassword([]byte(entity.Password), []byte(reqDTO.Password)) != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{
+		return rest.ResponseDTO{}, &servicehelper.Error{
 			Detail:  errors.New("invalid password"),
 			Message: "We could not authenticate you, please type you password again",
 			Param:   "password",
-			Code:    servicehelper.BadRequest}
+			Code:    servicehelper.BadRequest,
+		}
 	}
 
 	hashedPassword, err := scrypt.GenerateFromPassword([]byte(reqDTO.NewPassword), scrypt.DefaultParams)
 	if err != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{
+		return rest.ResponseDTO{}, &servicehelper.Error{
 			Detail:  errors.New("could not hash the password"),
 			Message: "We could not create your password, please try something different",
 			Param:   "password",
@@ -140,7 +182,7 @@ func (s *service) EditPassword(reqDTO jsonmodel.RequestDTOPutPassword) (resDTO j
 	entity.Password = string(hashedPassword[:])
 
 	if err := s.repo.Update(entity); err != nil {
-		return jsonmodel.ResponseDTO{}, &servicehelper.Error{
+		return rest.ResponseDTO{}, &servicehelper.Error{
 			Detail:  errors.New("could not update user"),
 			Message: "We could not update the password of this account, please contact us or try again later",
 			Code:    servicehelper.UnexpectedError}
@@ -166,4 +208,18 @@ func (s *service) Remove(email string) (error *servicehelper.Error) {
 		}
 	}
 	return
+}
+
+// Remove find a user in the database and delete it
+func (s *service) IsThatTheUserId(email string, userIdToCheck uint) (same bool, error *servicehelper.Error) {
+	entity, err := s.repo.FindByEmail(email)
+	if err != nil {
+		return false, &servicehelper.Error{
+			Detail:  errors.New("could not find user"),
+			Message: "We could not find any user, please check the provided email",
+			Param:   "email",
+			Code:    servicehelper.BadRequest,
+		}
+	}
+	return entity.ID == userIdToCheck, nil
 }
