@@ -12,7 +12,7 @@ import (
 	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/rest"
 )
 
-var BaseUrl = config.GAppUrl + "/api/v1"
+var BaseUrl = config.GAppUrl + "/api/private-v1"
 
 // AddWithProfile set up and create a user with a profile
 func (s *service) AddWithProfile(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTOWithProfile, *servicehelper.Error) {

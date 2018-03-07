@@ -44,7 +44,7 @@ func getAccessTokenOwnerUserIdMock(c *gin.Context) {
 
 func getUserProfileMock(c *gin.Context) {
 	c.JSON(http.StatusOK, struct {
-		ProfileId string `json:"profile_id"`
+		PublicId  string `json:"profile_id"`
 		FirstName string `json:"first_name"`
 		LastName  string `json:"last_name"`
 		Email     string `json:"email"`
@@ -54,13 +54,13 @@ func getUserProfileMock(c *gin.Context) {
 		LastName:  "Doe",
 		Birthday:  "1980-10-20",
 		Email:     c.Param("email"),
-		ProfileId: "12345678",
+		PublicId:  "12345678",
 	})
 }
 
 func postUserProfileMock(c *gin.Context) {
 	c.JSON(http.StatusOK, struct {
-		ProfileId string `json:"profile_id"`
+		PublicId  string `json:"profile_id"`
 		FirstName string `json:"first_name"`
 		LastName  string `json:"last_name"`
 		Email     string `json:"email"`
@@ -70,7 +70,7 @@ func postUserProfileMock(c *gin.Context) {
 		LastName:  "Doe",
 		Birthday:  "1980-10-20",
 		Email:     "test00@example.dev",
-		ProfileId: "12345678",
+		PublicId:  "12345678",
 	})
 }
 
@@ -96,12 +96,13 @@ func TestMain(m *testing.M) {
 	router.Use(cors.New(getCORSConfig()))
 
 	// Append routes to server
-	usercomponent.New(rest.New(service.New(repo.New()))).Attach(router.Group("/api/v1"))
+	userComponent := usercomponent.New(rest.New(service.New(repo.New())))
+	userComponent.AttachPublicAPI(router.Group("/api/v1"))
 
 	// Add mocked other micro-services called by this service
-	router.GET("/api/v1/access-token/:accessToken/get-owner", getAccessTokenOwnerUserIdMock)
-	router.POST("/api/v1/profiles", postUserProfileMock)
-	router.GET("/api/v1/profiles/:email", getUserProfileMock)
+	router.GET("/api/private-v1/access-token/:accessToken/get-owner", getAccessTokenOwnerUserIdMock)
+	router.POST("/api/private-v1/profiles", postUserProfileMock)
+	router.GET("/api/private-v1/profiles/:email", getUserProfileMock)
 
 	// Start service
 	go router.Run(":" + config.GPort)
@@ -505,7 +506,7 @@ func TestProfileWasCreated(t *testing.T) {
 	// init test variable
 	email := "test00@example.dev"
 	firstName := "John"
-	profileId := "12345678"
+	publicId := "12345678"
 
 	// print test variable for easy debug
 	t.Log("testing with following parameters:")
@@ -540,7 +541,7 @@ func TestProfileWasCreated(t *testing.T) {
 		t.Errorf("Expected %s to be %s, got %s", "email", email, userWithProfile.Email)
 	} else if userWithProfile.FirstName != firstName {
 		t.Errorf("Expected %s to be %s, got %s", "frist name", firstName, userWithProfile.FirstName)
-	} else if userWithProfile.ProfileId != profileId {
-		t.Errorf("Expected %s to be %s, got %s", "profile ID", profileId, userWithProfile.ProfileId)
+	} else if userWithProfile.PublicId != publicId {
+		t.Errorf("Expected %s to be %s, got %s", "profile ID", publicId, userWithProfile.PublicId)
 	}
 }

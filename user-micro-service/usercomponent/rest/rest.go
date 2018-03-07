@@ -19,6 +19,8 @@ type ServiceInterface interface {
 	AddWithProfile(profile RequestDTOWithProfile) (ResponseDTOWithProfile, *servicehelper.Error)
 	RetrieveWithProfile(email string) (ResponseDTOWithProfile, *servicehelper.Error)
 	IsThatTheUserId(email string, userIdToCheck uint) (bool, *servicehelper.Error)
+	RetrieveUserInfoByEmail(email string) (resDTO ResponseDTOInternalUserInfo, error *servicehelper.Error)
+	RetrieveUserInfoByUserId(userId uint) (resDTO ResponseDTOInternalUserInfo, error *servicehelper.Error)
 }
 
 type RequestDTO struct {
@@ -53,8 +55,13 @@ type ResponseDTO struct {
 	Email    string `json:"email"`
 }
 
+type ResponseDTOInternalUserInfo struct {
+	UserId uint   `json:"user_id"`
+	Email  string `json:"email"`
+}
+
 type ResponseDTOWithProfile struct {
-	ProfileId string `json:"profile_id"`
+	PublicId  string `json:"profile_id"`
 	Username  string `json:"username"`
 	Email     string `json:"email"`
 	FirstName string `json:"first_name"`

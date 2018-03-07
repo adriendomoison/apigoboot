@@ -10,7 +10,7 @@ import (
 )
 
 func askOauthServiceForTokenOwnerUserId(token string) (uint, int, *apihelper.ApiErrors) {
-	req, err := http.NewRequest("GET", config.GAppUrl+"/api/v1/access-token/"+token+"/get-owner", nil)
+	req, err := http.NewRequest("GET", config.GAppUrl+"/api/private-v1/access-token/"+token+"/get-owner", nil)
 	// TODO add client credential access token
 	//req.Header.Set("Authorization", "Bearer xxx")
 

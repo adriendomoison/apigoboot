@@ -2,8 +2,8 @@ package main
 
 import (
 	"log"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 	"github.com/adriendomoison/gobootapi/user-micro-service/config"
 	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent"
 	"github.com/adriendomoison/gobootapi/user-micro-service/database/dbconn"
@@ -23,7 +23,9 @@ func main() {
 	router.Use(cors.New(getCORSConfig()))
 
 	// User component
-	usercomponent.New(rest.New(service.New(repo.New()))).Attach(router.Group("/api/v1"))
+	userComponent := usercomponent.New(rest.New(service.New(repo.New())))
+	userComponent.AttachPublicAPI(router.Group("/api/v1"))
+	userComponent.AttachPrivateAPI(router.Group("/api/private-v1"))
 
 	// Start router
 	go log.Println("Service user started: Navigate to " + config.GAppUrl)

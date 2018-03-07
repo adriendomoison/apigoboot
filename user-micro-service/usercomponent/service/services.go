@@ -210,7 +210,7 @@ func (s *service) Remove(email string) (error *servicehelper.Error) {
 	return
 }
 
-// Remove find a user in the database and delete it
+// IsThatTheUserId check if userIdToCheck is the same than the resource
 func (s *service) IsThatTheUserId(email string, userIdToCheck uint) (same bool, error *servicehelper.Error) {
 	entity, err := s.repo.FindByEmail(email)
 	if err != nil {
