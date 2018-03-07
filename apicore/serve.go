@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/adriendomoison/gobootapi/apicore/core"
-	"github.com/adriendomoison/gobootapi/database/dbconn"
+	"github.com/adriendomoison/gobootapi/apicore/database/dbconn"
 )
 
 func main() {
