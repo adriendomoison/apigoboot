@@ -15,12 +15,12 @@ type ServiceInterface interface {
 	EditEmail(RequestDTOPutEmail) (ResponseDTO, *servicehelper.Error)
 	EditPassword(RequestDTOPutPassword) (ResponseDTO, *servicehelper.Error)
 	Remove(string) (*servicehelper.Error)
-	CheckCredentials(username string, password string, authType string) (userId uint, ok bool)
+	CheckCredentials(RequestDTOCheckCredentials) (ResponseDTOUserInfo, *servicehelper.Error)
 	AddWithProfile(profile RequestDTOWithProfile) (ResponseDTOWithProfile, *servicehelper.Error)
 	RetrieveWithProfile(email string) (ResponseDTOWithProfile, *servicehelper.Error)
 	IsThatTheUserId(email string, userIdToCheck uint) (bool, *servicehelper.Error)
-	RetrieveUserInfoByEmail(email string) (resDTO ResponseDTOInternalUserInfo, error *servicehelper.Error)
-	RetrieveUserInfoByUserId(userId uint) (resDTO ResponseDTOInternalUserInfo, error *servicehelper.Error)
+	RetrieveUserInfoByEmail(email string) (resDTO ResponseDTOUserInfo, error *servicehelper.Error)
+	RetrieveUserInfoByUserId(userId uint) (resDTO ResponseDTOUserInfo, error *servicehelper.Error)
 }
 
 type RequestDTO struct {
@@ -53,11 +53,6 @@ type RequestDTOPutPassword struct {
 type ResponseDTO struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
-}
-
-type ResponseDTOInternalUserInfo struct {
-	UserId uint   `json:"user_id"`
-	Email  string `json:"email"`
 }
 
 type ResponseDTOWithProfile struct {

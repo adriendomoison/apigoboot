@@ -18,6 +18,11 @@ func main() {
 	dbconn.Connect()
 	defer dbconn.DB.Close()
 
+	// Set GIN in production mode if run in production
+	if !config.GDevEnv {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	// Init router
 	router := gin.Default()
 	router.Use(cors.New(getCORSConfig()))
