@@ -5,8 +5,8 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/oauth2-micro-service/database/dbconn"
+	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/service"
 )
 
 // SaveAuthorize saves authorize data.
@@ -16,7 +16,7 @@ func (s *Storage) SaveAuthorize(data *osin.AuthorizeData) (err error) {
 		return errors.New("cannot assert user_id is uint")
 	}
 
-	var authorize dbmodel.Authorize
+	var authorize service.Authorize
 	copier.Copy(&authorize, &data)
 	authorize.UserId = userId
 	authorize.Client = data.Client.GetId()
@@ -37,7 +37,7 @@ func (s *Storage) SaveAuthorize(data *osin.AuthorizeData) (err error) {
 func (s *Storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 
 	// Load Authorize from DB
-	var authorize dbmodel.Authorize
+	var authorize service.Authorize
 	if err := dbconn.DB.Where("code = ?", code).Find(&authorize).Error; err != nil {
 		return nil, err
 	}
@@ -61,5 +61,5 @@ func (s *Storage) LoadAuthorize(code string) (*osin.AuthorizeData, error) {
 
 // RemoveAuthorize revokes or deletes the authorization code.
 func (s *Storage) RemoveAuthorize(code string) (err error) {
-	return dbconn.DB.Where("code = ?", code).Delete(&dbmodel.Authorize{}).Error
+	return dbconn.DB.Where("code = ?", code).Delete(&service.Authorize{}).Error
 }

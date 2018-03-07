@@ -3,8 +3,8 @@ package repo
 import (
 	"database/sql"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/oauth2-micro-service/database/dbconn"
+	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/service"
 )
 
 // Make sure the interface is implemented correctly
@@ -15,12 +15,12 @@ type Storage struct {
 	db *sql.DB
 }
 
-// New returns a new postgres storage instance.
-func New(db *sql.DB) *Storage {
-	dbconn.DB.AutoMigrate(&dbmodel.Client{})
-	dbconn.DB.AutoMigrate(&dbmodel.Authorize{})
-	dbconn.DB.AutoMigrate(&dbmodel.Access{})
-	dbconn.DB.AutoMigrate(&dbmodel.Refresh{})
+// NewStorage returns a new postgres storage instance.
+func NewStorage(db *sql.DB) *Storage {
+	dbconn.DB.AutoMigrate(&service.Client{})
+	dbconn.DB.AutoMigrate(&service.Authorize{})
+	dbconn.DB.AutoMigrate(&service.Access{})
+	dbconn.DB.AutoMigrate(&service.Refresh{})
 	return &Storage{db}
 }
 

@@ -8,14 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/apicore/config"
-	"github.com/adriendomoison/gobootapi/apicore/helpers/apihelper"
-	userrepo "github.com/adriendomoison/gobootapi/user/repo"
-	userservice "github.com/adriendomoison/gobootapi/user/service"
+	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
+	"github.com/adriendomoison/gobootapi/oauth2-micro-service/config"
+	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
 )
 
+type ServiceInterface interface {
+	AskUserServiceToCheckCredentials(username string, password string, method string) (ResponseDTOUserInfo, *apihelper.ApiErrors)
+	GetResourceOwnerId(token string) (ResponseDTOUserInfo, *servicehelper.Error)
+}
+
 type rest struct {
-	Server *osin.Server
+	server  *osin.Server
+	service ServiceInterface
 }
 
 type clientCredential struct {
@@ -26,22 +31,33 @@ type clientCredential struct {
 	ClientSecret string `json:"client_secret"`
 }
 
+type RequestDTOUserCredentials struct {
+	Method   string `json:"method"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type ResponseDTOUserInfo struct {
+	UserId uint   `json:"user_id"`
+	Email  string `json:"email"`
+}
+
 // New return a new rest instance
-func New(server *osin.Server) *rest {
-	return &rest{server}
+func New(server *osin.Server, service ServiceInterface) *rest {
+	return &rest{server, service}
 }
 
 // Authorization code endpoint
 func (r *rest) AppAuthorize(c *gin.Context) {
-	resp := r.Server.NewResponse()
+	resp := r.server.NewResponse()
 	defer resp.Close()
-	if ar := r.Server.HandleAuthorizeRequest(resp, c.Request); ar != nil {
-		if userId, ok := HandleLoginPage(ar, c); !ok {
+	if ar := r.server.HandleAuthorizeRequest(resp, c.Request); ar != nil {
+		if userId, ok := HandleLoginPage(r, ar, c); !ok {
 			return
 		} else {
 			ar.UserData = userId
 			ar.Authorized = true
-			r.Server.FinishAuthorizeRequest(resp, c.Request, ar)
+			r.server.FinishAuthorizeRequest(resp, c.Request, ar)
 		}
 	}
 	if resp.IsError && resp.InternalError != nil {
@@ -55,10 +71,9 @@ func (r *rest) AppAuthorize(c *gin.Context) {
 
 // Access token endpoint
 func (r *rest) AppToken(c *gin.Context) {
-	resp := r.Server.NewResponse()
+	resp := r.server.NewResponse()
 	defer resp.Close()
-	if ar := r.Server.HandleAccessRequest(resp, c.Request); ar != nil {
-		userService := userservice.New(userrepo.New())
+	if ar := r.server.HandleAccessRequest(resp, c.Request); ar != nil {
 		ar.UserData = uint(0)
 		switch ar.Type {
 		case osin.AUTHORIZATION_CODE:
@@ -66,9 +81,9 @@ func (r *rest) AppToken(c *gin.Context) {
 		case osin.REFRESH_TOKEN:
 			ar.Authorized = true
 		case osin.PASSWORD:
-			if userId, ok := userService.CheckCredentials(ar.Username, ar.Password, c.Query("method")); ok {
+			if userInfo, err := r.service.AskUserServiceToCheckCredentials(ar.Username, ar.Password, c.Query("method")); err == nil {
 				ar.Authorized = true
-				ar.UserData = userId
+				ar.UserData = userInfo.UserId
 			}
 		case osin.CLIENT_CREDENTIALS:
 			ar.Authorized = true
@@ -77,7 +92,7 @@ func (r *rest) AppToken(c *gin.Context) {
 				ar.Authorized = true
 			}
 		}
-		r.Server.FinishAccessRequest(resp, c.Request, ar)
+		r.server.FinishAccessRequest(resp, c.Request, ar)
 	}
 	if resp.IsError && resp.InternalError != nil {
 		log.Printf("ERROR: %s\n", resp.InternalError)
@@ -90,11 +105,11 @@ func (r *rest) AppToken(c *gin.Context) {
 
 // Information endpoint
 func (r *rest) AppInfo(c *gin.Context) {
-	resp := r.Server.NewResponse()
+	resp := r.server.NewResponse()
 	defer resp.Close()
 
-	if ir := r.Server.HandleInfoRequest(resp, c.Request); ir != nil {
-		r.Server.FinishInfoRequest(resp, c.Request, ir)
+	if ir := r.server.HandleInfoRequest(resp, c.Request); ir != nil {
+		r.server.FinishInfoRequest(resp, c.Request, ir)
 	}
 	osin.OutputJSON(resp, c.Writer, c.Request)
 }
@@ -380,4 +395,12 @@ func (r *rest) AppAuthInfo(c *gin.Context) {
 
 	// show json access token
 	c.JSON(http.StatusOK, jr)
+}
+
+func (r* rest) GetAccessTokenOwnerUserId(c *gin.Context) {
+	if resDTO, err := r.service.GetResourceOwnerId(c.Param("accessToken")); err != nil {
+		c.JSON(apihelper.BuildResponseError(err))
+	} else {
+		c.JSON(http.StatusOK, resDTO)
+	}
 }

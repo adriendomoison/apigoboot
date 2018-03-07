@@ -4,13 +4,13 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth/repo/dbmodel"
+	"github.com/adriendomoison/gobootapi/oauth2-micro-service/database/dbconn"
+	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/service"
 )
 
 // GetClient loads the client by id
 func (s *Storage) GetClient(id string) (osin.Client, error) {
-	var client dbmodel.Client
+	var client service.Client
 	if err := dbconn.DB.Where("id = ?", id).Find(&client).Error; err != nil {
 		return nil, err
 	}
@@ -28,7 +28,7 @@ func (s *Storage) UpdateClient(c osin.Client) error {
 		return errors.New("cannot assert user_id is uint")
 	}
 
-	var client dbmodel.Client
+	var client service.Client
 	client.Id = c.GetId()
 	client.Secret = c.GetSecret()
 	client.RedirectUri = c.GetRedirectUri()
@@ -47,7 +47,7 @@ func (s *Storage) CreateClient(c osin.Client) error {
 		return errors.New("cannot assert user_id is uint")
 	}
 
-	var client dbmodel.Client
+	var client service.Client
 	client.Id = c.GetId()
 	client.Secret = c.GetSecret()
 	client.RedirectUri = c.GetRedirectUri()
@@ -65,5 +65,5 @@ func (s *Storage) CreateClient(c osin.Client) error {
 
 // RemoveClient removes a client (identified by id) from the database. Returns an error if something went wrong.
 func (s *Storage) RemoveClient(id string) (err error) {
-	return dbconn.DB.Where("id = ?", id).Delete(&dbmodel.Client{}).Error
+	return dbconn.DB.Where("id = ?", id).Delete(&service.Client{}).Error
 }
