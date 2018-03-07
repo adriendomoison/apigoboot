@@ -1,6 +1,6 @@
 # ApiGoBoot - WIP - Looking for inputs & code reviews! 🚀♥️
 
-ApiGoBoot, the boilerplate that does NOT write Java in Go.
+This is my playground for a boilerplate API in Go. I am changing the architecture when learning from what I can read on the web.
 
 
 ### Set up
