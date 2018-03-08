@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 )
 
 func HandleLoginPage(r *rest, ar *osin.AuthorizeRequest, c *gin.Context) (uint, bool) {

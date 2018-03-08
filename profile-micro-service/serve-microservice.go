@@ -4,12 +4,12 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/config"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/profilecomponent"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/database/dbconn"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/profilecomponent/repo"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/profilecomponent/service"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/profilecomponent/rest"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/profilecomponent"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/database/dbconn"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/profilecomponent/repo"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/profilecomponent/service"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/profilecomponent/rest"
 )
 
 // startAPI start the API and keep it alive

@@ -9,9 +9,9 @@ import (
 	"errors"
 	"github.com/jinzhu/gorm"
 	"github.com/jinzhu/copier"
-	"github.com/adriendomoison/gobootapi/tool"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/profilecomponent/rest"
+	"github.com/adriendomoison/apigoboot/tool"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/profilecomponent/rest"
 )
 
 type RepoInterface interface {

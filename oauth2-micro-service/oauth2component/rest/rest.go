@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/config"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 )
 
 type ServiceInterface interface {

@@ -7,10 +7,10 @@ import (
 	"encoding/json"
 	"github.com/jinzhu/gorm"
 	"github.com/go-errors/errors"
-	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/config"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/rest"
+	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/oauth2component/rest"
 )
 
 type RepoInterface interface {

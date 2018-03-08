@@ -5,8 +5,8 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/service"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/oauth2component/service"
 )
 
 // SaveAuthorize saves authorize data.

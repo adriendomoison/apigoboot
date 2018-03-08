@@ -3,10 +3,10 @@ package service
 import (
 	"os"
 	"testing"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
-	"github.com/adriendomoison/gobootapi/user-micro-service/config"
-	"github.com/adriendomoison/gobootapi/user-micro-service/database/dbconn"
-	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/rest"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/user-micro-service/config"
+	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
+	"github.com/adriendomoison/apigoboot/user-micro-service/usercomponent/rest"
 )
 
 var email = "john.doe@example.dev"

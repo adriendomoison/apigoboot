@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
-	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/rest"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/user-micro-service/usercomponent/rest"
 )
 
 // RetrieveUserInfoByEmail ask database to retrieve a user from its email

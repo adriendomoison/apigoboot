@@ -3,9 +3,9 @@ package rest
 import (
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
-	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent"
+	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/user-micro-service/usercomponent"
 )
 
 type ServiceInterface interface {

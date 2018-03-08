@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
-	"github.com/adriendomoison/gobootapi/profile-micro-service/config"
+	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
 )
 
 func askOauthServiceForTokenOwnerUserId(token string) (uint, int, *apihelper.ApiErrors) {

@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/adriendomoison/gobootapi/apicore/config"
+	"github.com/adriendomoison/apigoboot/apicore/config"
 )
 
 var DB *gorm.DB

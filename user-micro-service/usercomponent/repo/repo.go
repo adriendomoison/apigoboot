@@ -1,8 +1,8 @@
 package repo
 
 import (
-	"github.com/adriendomoison/gobootapi/user-micro-service/database/dbconn"
-	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/service"
+	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
+	"github.com/adriendomoison/apigoboot/user-micro-service/usercomponent/service"
 )
 
 // Make sure the interface is implemented correctly

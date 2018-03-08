@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/go-playground/validator.v8"
-	"github.com/adriendomoison/gobootapi/tool"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/tool"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 )
 
 // Interface for all API error messages

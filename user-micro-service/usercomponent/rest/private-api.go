@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"net/http"
 	"github.com/gin-gonic/gin"
-	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 )
 
 type ResponseDTOUserInfo struct {

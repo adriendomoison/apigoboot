@@ -4,8 +4,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/RangelReale/osin"
 	"github.com/go-errors/errors"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/service"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/oauth2component/service"
 )
 
 // LoadRefresh retrieves refresh AccessData. Client information MUST be loaded together.

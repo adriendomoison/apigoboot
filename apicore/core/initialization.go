@@ -4,8 +4,8 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
-	"github.com/adriendomoison/gobootapi/apicore/config"
-	"github.com/adriendomoison/gobootapi/apicore/rest"
+	"github.com/adriendomoison/apigoboot/apicore/config"
+	"github.com/adriendomoison/apigoboot/apicore/rest"
 )
 
 // startAPI start the API and keep it alive

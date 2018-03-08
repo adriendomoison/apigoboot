@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"io/ioutil"
 	"encoding/json"
-	"github.com/adriendomoison/gobootapi/errorhandling/apihelper"
-	"github.com/adriendomoison/gobootapi/errorhandling/servicehelper"
-	"github.com/adriendomoison/gobootapi/user-micro-service/config"
-	"github.com/adriendomoison/gobootapi/user-micro-service/usercomponent/rest"
+	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/user-micro-service/config"
+	"github.com/adriendomoison/apigoboot/user-micro-service/usercomponent/rest"
 )
 
 var BaseUrl = config.GAppUrl + "/api/private-v1"

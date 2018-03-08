@@ -4,13 +4,13 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/config"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/database/dbconn"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/rest"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/oauth2component"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/oauth2component/rest"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/repo"
-	"github.com/adriendomoison/gobootapi/oauth2-micro-service/oauth2component/service"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/oauth2component/repo"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/oauth2component/service"
 )
 
 // startAPI start the API and keep it alive
