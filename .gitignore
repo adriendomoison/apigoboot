@@ -18,3 +18,4 @@
 # IntelliJ IDEA specific
 .idea
 apigoboot.iml
+postgres/pgdata/
