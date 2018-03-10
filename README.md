@@ -1,44 +1,14 @@
-# ApiGoBoot - WIP - Looking for inputs & code reviews! 🚀 ♥ 🚀 ♥ 🚀
+# ApiGoBoot - WIP - Looking for inputs & code reviews! 🚀❤️️🚀❤️🚀
 
 This is a playground for a boilerplate API in Go using a micro service oriented architecture. The architecture will be updated depending on what I'll be reading/learning on the web.
 
 ### Set up
 
 - Add `GOOGLE_LOGIN_API_CIENT_ID` and `GOOGLE_LOGIN_API_SECRET_ID` to your environment to allow oauth2 to process sign in/up with google (generated at [https://console.developers.google.com/apis/credentials/oauthclient](https://console.developers.google.com/apis/credentials/oauthclient)
-- Add the line `127.0.0.42      api.apigoboot.dev` to your `/etc/hosts`
-- Create a facebook app and add `api.apigoboot.dev:4200` in the field `Site URL` in basic settings ([https://developers.facebook.com/apps](https://developers.facebook.com/apps))
+- Add the line `127.0.0.1      api.go.boot` to your `/etc/hosts`
+- Create a facebook app and add `api.go.boot:4200` in the field `Site URL` in basic settings ([https://developers.facebook.com/apps](https://developers.facebook.com/apps))
 
-
-#### Set up DB - local db
-Install postgres on Linux
-```
-sudo apt-get install postgresql postgresql-contrib
-sudo -i -u postgres
-```
-
-Install postgres on Mac
-```
-brew install postgresql
-brew services start postgresql
-createdb `whoami`
-```
-
-and then
-```
-psql
-
-CREATE USER apigoboot;
-ALTER ROLE apigoboot WITH CREATEDB;
-CREATE DATABASE apigoboot OWNER apigoboot;
-ALTER USER apigoboot WITH ENCRYPTED PASSWORD 'apigoboot';
-
-CREATE USER apigoboot_test;
-ALTER ROLE apigoboot_test WITH CREATEDB;
-CREATE DATABASE apigoboot_test OWNER apigoboot_test;
-ALTER USER apigoboot_test WITH ENCRYPTED PASSWORD 'apigoboot_test';
-```
-
-#### Set up DB - docker method
+#### Start
 
 ```
 docker-compose up
