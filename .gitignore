@@ -19,3 +19,7 @@
 .idea
 apigoboot.iml
 postgres/pgdata/
+
+oauth2-micro-service/serve-micro-service
+profile-micro-service/serve-micro-service
+user-micro-service/serve-micro-service
