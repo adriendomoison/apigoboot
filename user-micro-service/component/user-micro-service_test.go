@@ -626,7 +626,7 @@ func TestGetByEmail(t *testing.T) {
 	if resp.StatusCode != 200 {
 		t.Errorf("Expected %s to be %s, got %s", "status", "200", resp.Status)
 	} else if userInfo.UserId != uint(userId) {
-		t.Errorf("Expected %s to be %s, got %s", "user id", userId, userInfo.UserId)
+		t.Errorf("Expected %s to be %v, got %vR", "user id", userId, userInfo.UserId)
 	}
 }
 

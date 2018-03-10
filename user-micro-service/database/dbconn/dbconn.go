@@ -31,7 +31,6 @@ func Connect() (err error) {
 func connectToDB(username string, dbName string, password string, host string) (err error) {
 	log.Println("CONNECTING TO [" + dbName + "] DB...")
 	for i := 0; i < 5; i++ {
-		time.Sleep(5 * time.Second)
 		DB, err = gorm.Open("postgres", "host="+host+" user="+username+" dbname="+dbName+" sslmode=disable password="+password)
 		if err != nil {
 			log.Println("Still trying...")
@@ -40,6 +39,7 @@ func connectToDB(username string, dbName string, password string, host string) (
 			log.Println("Database status: [Connected]")
 			break
 		}
+		time.Sleep(5 * time.Second)
 	}
 	return
 }

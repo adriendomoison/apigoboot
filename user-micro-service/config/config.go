@@ -7,7 +7,7 @@ import (
 
 var GAppName = "apigoboot"
 var GDevPort = "4200"
-var GDevAppUrl = "http://api.apigoboot.dev"
+var GDevAppUrl = "http://apigoboot"
 var GProdAppUrl = "https://apigoboot.herokuapp.com"
 
 var GDevEnv bool
