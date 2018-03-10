@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    build: ./postgres
+    volumes:
+      - ./postgres/pgdata:/pgdata
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=apigoboot
+      - POSTGRES_PASSWORD=apigoboot
+      - PGDATA=/pgdata
+
+  api:
+    build:
+      context: ./user-micro-service
+    volumes:
+      - ./user-micro-service:/go/src/github.com/adriendomoison/apigoboot/user-micro-service/components/serve-micro-service
+    ports:
+      - "4200:4200"
+    links:
+      - db
