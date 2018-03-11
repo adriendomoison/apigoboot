@@ -111,8 +111,15 @@ func TestMain(m *testing.M) {
 	// Start service
 	go router.Run(":" + config.GPort)
 
-	// Give time to run the router
-	time.Sleep(1000)
+	// Wait and check if the http server is running
+	for i := 0; i < 5; i++ {
+		req, _ := http.NewRequest("GET", PublicBaseUrl+"/", nil)
+		client := &http.Client{}
+		if _, err := client.Do(req); err == nil {
+			break
+		}
+		time.Sleep(1000)
+	}
 
 	// Start tests
 	code := m.Run()
