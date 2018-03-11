@@ -1,5 +1,7 @@
 # ApiGoBoot - WIP - Looking for inputs & code reviews! 🚀❤️️🚀❤️🚀
 
+[![Build Status](https://travis-ci.org/adriendomoison/apigoboot.svg?branch=master)](https://travis-ci.org/adriendomoison/apigoboot)
+
 This is a playground for a boilerplate API in Go using a micro service oriented architecture. The architecture will be updated depending on what I'll be reading/learning on the web.
 
 ### Set up
