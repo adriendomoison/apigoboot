@@ -100,7 +100,7 @@ func TestAddUserWithSameEmail(t *testing.T) {
 	}
 
 	if Err != nil && Err.Code != servicehelper.AlreadyExist {
-		t.Errorf("Code was supposde to be Already Exist but got %s", Err.Code)
+		t.Errorf("Code was supposde to be Already Exist but got %v", Err.Code)
 	}
 }
 
@@ -124,7 +124,7 @@ func TestErrorMessageOnRetrieveUserThatDoesNotExist(t *testing.T) {
 	}
 
 	if Err != nil && Err.Code != servicehelper.NotFound {
-		t.Errorf("Code should be: Not Found, got %s", Err.Code)
+		t.Errorf("Code should be: Not Found, got %v", Err.Code)
 	}
 }
 
@@ -144,7 +144,7 @@ func TestErrorMessageOnEditUserThatDoesNotExist(t *testing.T) {
 	}
 
 	if Err != nil && Err.Code != servicehelper.NotFound {
-		t.Errorf("Code should be: Not Found, got %s", Err.Code)
+		t.Errorf("Code should be: Not Found, got %v", Err.Code)
 	}
 
 	reqDTOPassword := rest.RequestDTOPutPassword{
@@ -160,7 +160,7 @@ func TestErrorMessageOnEditUserThatDoesNotExist(t *testing.T) {
 	}
 
 	if Err != nil && Err.Code != servicehelper.NotFound {
-		t.Errorf("Code should be: Not Found, got %s", Err.Code)
+		t.Errorf("Code should be: Not Found, got %v", Err.Code)
 	}
 
 }

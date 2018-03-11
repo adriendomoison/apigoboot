@@ -51,7 +51,7 @@ func requestCode(t *testing.T) string {
 	form.Add("username", "adrien@example.dev")
 	form.Add("password", "password123")
 
-	req, err := http.NewRequest("POST", PublicBaseUrl+"/authorize?response_type=code&client_id=apigoboot&client_secret=apigoboot&state=xyz&scope=everything&redirect_uri=http://api.apigoboot.dev:4200/authentication/oauth2/code", strings.NewReader(form.Encode()))
+	req, err := http.NewRequest("POST", PublicBaseUrl+"/authorize?response_type=code&client_id=apigoboot&client_secret=apigoboot&state=xyz&scope=everything&redirect_uri=http://api.go.boot:4202/authentication/oauth2/code", strings.NewReader(form.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{}
@@ -135,7 +135,7 @@ func createClient() {
 	dbconn.DB.Create(&service.Client{
 		Id:          "apigoboot",
 		Secret:      "apigoboot",
-		RedirectUri: "http://api.apigoboot.dev:4200/authentication/oauth2/code",
+		RedirectUri: "http://api.go.boot:4202/authentication/oauth2/code",
 		UserId:      1,
 	})
 }
