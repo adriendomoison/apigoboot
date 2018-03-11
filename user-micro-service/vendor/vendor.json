@@ -9,22 +9,16 @@
 			"revisionTime": "2018-03-07T21:26:24Z"
 		},
 		{
-			"checksumSHA1": "lofk3hEtjWkO+f0r2unukNJ4/sg=",
+			"checksumSHA1": "0T/aGSd6oCDpVAWYwrCMo0Wz2tE=",
 			"path": "github.com/adriendomoison/apigoboot/errorhandling/apihelper",
-			"revision": "73bd50e6a9982d8607dfe407b468fc0140d0d73f",
-			"revisionTime": "2018-03-08T03:03:12Z"
+			"revision": "44a8a9fc5d9c88c9bcc55562774bd01f45871cf5",
+			"revisionTime": "2018-03-11T04:34:34Z"
 		},
 		{
 			"checksumSHA1": "Vn0rkbWpj6z+BAyBSNxdwB2MUbQ=",
 			"path": "github.com/adriendomoison/apigoboot/errorhandling/servicehelper",
-			"revision": "73bd50e6a9982d8607dfe407b468fc0140d0d73f",
-			"revisionTime": "2018-03-08T03:03:12Z"
-		},
-		{
-			"checksumSHA1": "x/x3t3E5vxRAa6DRjZ3Qvh/du4U=",
-			"path": "github.com/adriendomoison/apigoboot/tool",
-			"revision": "73bd50e6a9982d8607dfe407b468fc0140d0d73f",
-			"revisionTime": "2018-03-08T03:03:12Z"
+			"revision": "44a8a9fc5d9c88c9bcc55562774bd01f45871cf5",
+			"revisionTime": "2018-03-11T04:34:34Z"
 		},
 		{
 			"checksumSHA1": "PhyuD3dAyeZ/1dGlezZUNVFqYmI=",

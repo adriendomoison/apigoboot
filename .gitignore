@@ -18,8 +18,9 @@
 # IntelliJ IDEA specific
 .idea
 apigoboot.iml
-postgres/pgdata/
+api-db/pgdata/
 
 oauth2-micro-service/serve-micro-service
 profile-micro-service/serve-micro-service
 user-micro-service/serve-micro-service
+api-gateway/serve-api-gateway

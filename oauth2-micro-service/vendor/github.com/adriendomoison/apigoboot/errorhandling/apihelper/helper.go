@@ -5,12 +5,14 @@ package apihelper
 
 import (
 	"errors"
+	"regexp"
+	"strings"
 	"strconv"
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/go-playground/validator.v8"
-	"github.com/adriendomoison/apigoboot/tool"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+
 )
 
 // Interface for all API error messages
@@ -37,8 +39,8 @@ func BuildRequestError(err error) (int, ApiErrors) {
 	case validator.ValidationErrors:
 		for _, v := range err.(validator.ValidationErrors) {
 			var validationError Error
-			validationError.Param = tool.ToSnakeCase(v.Field)
-			validationError.Detail = "Field validation for " + tool.ToSnakeCase(v.Field) + " failed on the " + v.Tag + " tag."
+			validationError.Param = toSnakeCase(v.Field)
+			validationError.Detail = "Field validation for " + toSnakeCase(v.Field) + " failed on the " + v.Tag + " tag."
 			if v.Tag == "required" {
 				validationError.Message = "This field is required"
 			}
@@ -82,4 +84,11 @@ func GetBoolQueryParam(c *gin.Context, value *bool, queryParam string, defaultVa
 		*value = defaultValue
 	}
 	return true
+}
+
+// toSnakeCase change a string to it's snake case version
+func toSnakeCase(str string) string {
+	snake := regexp.MustCompile("(.)([A-Z][a-z]+)").ReplaceAllString(str, "${1}_${2}")
+	snake = regexp.MustCompile("([a-z0-9])([A-Z])").ReplaceAllString(snake, "${1}_${2}")
+	return strings.ToLower(snake)
 }

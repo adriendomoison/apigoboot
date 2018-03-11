@@ -1,15 +1,23 @@
 version: '3'
 services:
   db:
-    build: ./postgres
+    build: api-db
     volumes:
-      - ./postgres/pgdata:/pgdata
+      - ./api-db/pgdata:/pgdata
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=apigoboot
       - POSTGRES_PASSWORD=apigoboot
       - PGDATA=/pgdata
+
+  api_gateway:
+    build:
+      context: api-gateway
+    volumes:
+      - ./api-gateway:/go/src/github.com/adriendomoison/apigoboot/api-gateway/
+    ports:
+      - "4000:4000"
 
   user_api:
     build:
