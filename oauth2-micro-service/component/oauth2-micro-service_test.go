@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/RangelReale/osin"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
@@ -18,7 +19,6 @@ import (
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/repo"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
-	"github.com/RangelReale/osin"
 )
 
 var PublicBaseUrl = config.GAppUrl + "/authentication"

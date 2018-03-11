@@ -3,6 +3,7 @@ package main_test
 import (
 	"io"
 	"os"
+	"time"
 	"bytes"
 	"strconv"
 	"testing"
@@ -100,6 +101,9 @@ func TestMain(m *testing.M) {
 
 	// Start service
 	go router.Run(":" + config.GPort)
+
+	// Give time to run the router
+	time.Sleep(1000)
 
 	// Start tests
 	code := m.Run()

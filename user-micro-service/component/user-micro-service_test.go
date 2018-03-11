@@ -3,6 +3,7 @@ package main_test
 import (
 	"io"
 	"os"
+	"time"
 	"bytes"
 	"strconv"
 	"testing"
@@ -13,11 +14,11 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/config"
+	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/service"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/repo"
-	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
 )
 
 var PublicBaseUrl = config.GAppUrl + "/api/v1"
@@ -28,7 +29,7 @@ func getCORSConfig() cors.Config {
 	CORSConfig := cors.DefaultConfig()
 	CORSConfig.AllowCredentials = true
 	CORSConfig.AllowAllOrigins = true
-	CORSConfig.AllowHeaders = []string{"*", "Origin", "Content-Type", "Authorization", "Cookie"}
+	CORSConfig.AllowHeaders = []string{"*"}
 	CORSConfig.AllowMethods = []string{"GET", "PUT", "POST", "DELETE", "OPTIONS"}
 	return CORSConfig
 }
@@ -109,6 +110,9 @@ func TestMain(m *testing.M) {
 
 	// Start service
 	go router.Run(":" + config.GPort)
+
+	// Give time to run the router
+	time.Sleep(1000)
 
 	// Start tests
 	code := m.Run()
