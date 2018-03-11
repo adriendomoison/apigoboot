@@ -14,10 +14,10 @@ import (
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/database/dbconn"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/service"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/repo"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
 )
 
 var PublicBaseUrl = config.GAppUrl + "/api/v1"

@@ -5,3 +5,7 @@ go:
 before_script:
   - psql -c "CREATE DATABASE apigoboot_test;" -U postgres
   - psql -c "CREATE USER apigoboot_test WITH PASSWORD 'apigoboot_test';" -U postgres
+
+addons:
+  hosts:
+    - api.go.boot
