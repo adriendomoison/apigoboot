@@ -23,38 +23,36 @@ func (s *service) AddWithProfile(reqDTO rest.RequestDTOWithProfile) (rest.Respon
 		Password: reqDTO.Password,
 	}); err != nil {
 		return rest.ResponseDTOWithProfile{}, err
-	} else {
-		if resDTO, apiErrors, statusCode := callPostProfileService(reqDTO); len(apiErrors.Errors) > 0 {
-			s.Remove(resDTO.Email)
-			return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
-				Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
-				Message: apiErrors.Errors[0].(apihelper.Error).Message,
-				Param:   apiErrors.Errors[0].(apihelper.Error).Param,
-				Code:    servicehelper.Code(statusCode),
-			}
-		} else {
-			return resDTO, nil
+	}
+	resDTO, apiErrors, statusCode := callPostProfileService(reqDTO)
+	if len(apiErrors.Errors) > 0 {
+		s.Remove(resDTO.Email)
+		return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
+			Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
+			Message: apiErrors.Errors[0].(apihelper.Error).Message,
+			Param:   apiErrors.Errors[0].(apihelper.Error).Param,
+			Code:    servicehelper.Code(statusCode),
 		}
 	}
+	return resDTO, nil
 }
 
 // RetrieveWithProfile retrieve a user with its profile
 func (s *service) RetrieveWithProfile(email string) (rest.ResponseDTOWithProfile, *servicehelper.Error) {
 	if _, err := s.Retrieve(email); err != nil {
 		return rest.ResponseDTOWithProfile{}, err
-	} else {
-		if resDTO, apiErrors, statusCode := callGetProfileService(email); len(apiErrors.Errors) > 0 {
-			s.Remove(resDTO.Email)
-			return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
-				Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
-				Message: apiErrors.Errors[0].(apihelper.Error).Message,
-				Param:   apiErrors.Errors[0].(apihelper.Error).Param,
-				Code:    servicehelper.Code(statusCode),
-			}
-		} else {
-			return resDTO, nil
+	}
+	resDTO, apiErrors, statusCode := callGetProfileService(email)
+	if len(apiErrors.Errors) > 0 {
+		s.Remove(resDTO.Email)
+		return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
+			Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
+			Message: apiErrors.Errors[0].(apihelper.Error).Message,
+			Param:   apiErrors.Errors[0].(apihelper.Error).Param,
+			Code:    servicehelper.Code(statusCode),
 		}
 	}
+	return resDTO, nil
 }
 
 // callPostProfileService ask the profile micro service to create a profile for the user

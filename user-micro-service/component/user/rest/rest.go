@@ -62,7 +62,7 @@ type ResponseDTO struct {
 	Email    string `json:"email"`
 }
 
-// ResponseDTO is the object to map JSON response body when a profile is added to the response
+// ResponseDTOWithProfile is the object to map JSON response body when a profile is added to the response
 type ResponseDTOWithProfile struct {
 	PublicId  string `json:"profile_id"`
 	Username  string `json:"username"`

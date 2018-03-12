@@ -18,7 +18,7 @@ type RestInterface interface {
 	ValidateAccessToken(c *gin.Context)
 }
 
-// Implement interface
+// Component implement interface component
 type Component struct {
 	rest RestInterface
 }

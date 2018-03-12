@@ -20,7 +20,7 @@ type RestInterface interface {
 	GetAccessTokenOwnerUserId(c *gin.Context)
 }
 
-// Component
+// Component implement interface component
 type Component struct {
 	rest RestInterface
 }
@@ -30,7 +30,7 @@ func New(rest RestInterface) *Component {
 	return &Component{rest}
 }
 
-// Attach link the oauth micro-service with its dependencies to the system
+// AttachPublicAPI link the oauth micro-service with its dependencies to the system
 func (component *Component) AttachPublicAPI(group *gin.RouterGroup) {
 	group.GET("/authorize", component.rest.AppAuthorize)
 	group.POST("/authorize", component.rest.AppAuthorize)
@@ -45,7 +45,7 @@ func (component *Component) AttachPublicAPI(group *gin.RouterGroup) {
 	group.GET("/oauth2/info", component.rest.AppAuthInfo)
 }
 
-// Attach link the oauth micro-service with its dependencies to the system
+// AttachPrivateAPI link the oauth micro-service with its dependencies to the system
 func (component *Component) AttachPrivateAPI(group *gin.RouterGroup) {
 	group.GET("/access-token/:accessToken/get-owner", component.rest.GetAccessTokenOwnerUserId)
 }

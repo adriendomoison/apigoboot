@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RestInterface is the model for the rest package of profile
 type RestInterface interface {
 	ValidateAccessToken(*gin.Context)
 	Post(*gin.Context)
@@ -13,7 +14,7 @@ type RestInterface interface {
 	Delete(*gin.Context)
 }
 
-// Implement interface
+// Component implement interface component
 type Component struct {
 	rest RestInterface
 }

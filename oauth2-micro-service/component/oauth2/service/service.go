@@ -68,10 +68,12 @@ type service struct {
 	repo RepoInterface
 }
 
+// New return a new instance of the service
 func New(repo RepoInterface) *service {
 	return &service{repo}
 }
 
+// AskUserServiceToCheckCredentials call user service to check if the credentials are correct
 func (s *service) AskUserServiceToCheckCredentials(username string, password string, method string) (rest.ResponseDTOUserInfo, *apihelper.ApiErrors) {
 
 	requestBody := rest.RequestDTOUserCredentials{
@@ -104,9 +106,8 @@ func (s *service) AskUserServiceToCheckCredentials(username string, password str
 
 	if len(apiErrors.Errors) == 0 {
 		return userInfo, nil
-	} else {
-		return rest.ResponseDTOUserInfo{}, &apiErrors
 	}
+	return rest.ResponseDTOUserInfo{}, &apiErrors
 }
 
 // GetResourceOwnerId ask database to retrieve the id of the user owning the access entity with this access_token

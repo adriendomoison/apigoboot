@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-// Interface for all API error messages
+// ApiError interface for all API error messages
 type ApiError interface {
 }
 

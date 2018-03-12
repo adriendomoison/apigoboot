@@ -58,16 +58,16 @@ func checkCredentialsForFacebookAuth(s *service, facebookUserId string, accessTo
 			Detail: errors.New("incorrect username or password"),
 		}
 	}
-	if user, err := s.repo.FindByEmail(res["email"].(string)); err != nil {
+	user, err := s.repo.FindByEmail(res["email"].(string))
+	if err != nil {
 		return rest.ResponseDTOUserInfo{}, &servicehelper.Error{
 			Detail: errors.New("incorrect username or password"),
 		}
-	} else {
-		return rest.ResponseDTOUserInfo{
-			UserId: user.ID,
-			Email:  user.Email,
-		}, nil
 	}
+	return rest.ResponseDTOUserInfo{
+		UserId: user.ID,
+		Email:  user.Email,
+	}, nil
 }
 
 // CheckCredentialsForGoogleAuth check user credentials by contacting google API
@@ -101,15 +101,14 @@ func checkCredentialsForGoogleAuth(s *service, _ string, accessToken string) (re
 			Detail: errors.New("error while trying to check credentials"),
 		}
 	}
-
-	if user, err := s.repo.FindByEmail(dat["email"].(string)); err != nil {
+	user, err := s.repo.FindByEmail(dat["email"].(string))
+	if err != nil {
 		return rest.ResponseDTOUserInfo{}, &servicehelper.Error{
 			Detail: errors.New("incorrect username or password"),
 		}
-	} else {
-		return rest.ResponseDTOUserInfo{
-			UserId: user.ID,
-			Email:  user.Email,
-		}, nil
 	}
+	return rest.ResponseDTOUserInfo{
+		UserId: user.ID,
+		Email:  user.Email,
+	}, nil
 }

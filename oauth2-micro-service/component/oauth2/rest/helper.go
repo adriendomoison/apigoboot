@@ -10,17 +10,17 @@ import (
 	"net/http"
 )
 
-func HandleLoginPage(r *rest, ar *osin.AuthorizeRequest, c *gin.Context) (uint, bool) {
+func handleLoginPage(r *rest, ar *osin.AuthorizeRequest, c *gin.Context) (uint, bool) {
 	var errorStatus = false
 	var errorList []apihelper.ApiError
 	if c.Request.Method == "POST" {
 		c.Request.ParseForm()
-		if userInfo, err := r.service.AskUserServiceToCheckCredentials(c.Request.Form.Get("username"), c.Request.Form.Get("password"), "password"); err == nil {
+		userInfo, err := r.service.AskUserServiceToCheckCredentials(c.Request.Form.Get("username"), c.Request.Form.Get("password"), "password")
+		if err == nil {
 			return userInfo.UserId, true
-		} else {
-			errorStatus = true
-			errorList = err.Errors
 		}
+		errorStatus = true
+		errorList = err.Errors
 	}
 	c.HTML(http.StatusOK, "authentication.tmpl", gin.H{
 		"client_id":     ar.Client.GetId(),
@@ -31,7 +31,7 @@ func HandleLoginPage(r *rest, ar *osin.AuthorizeRequest, c *gin.Context) (uint, 
 	return 0, false
 }
 
-func DownloadAccessToken(url string, auth *osin.BasicAuth, output map[string]interface{}) error {
+func downloadAccessToken(url string, auth *osin.BasicAuth, output map[string]interface{}) error {
 	// download access token
 	preq, err := http.NewRequest("POST", url, nil)
 	if err != nil {

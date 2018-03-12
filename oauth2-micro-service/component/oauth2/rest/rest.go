@@ -57,13 +57,13 @@ func (r *rest) AppAuthorize(c *gin.Context) {
 	resp := r.server.NewResponse()
 	defer resp.Close()
 	if ar := r.server.HandleAuthorizeRequest(resp, c.Request); ar != nil {
-		if userId, ok := HandleLoginPage(r, ar, c); !ok {
+		userId, ok := handleLoginPage(r, ar, c)
+		if !ok {
 			return
-		} else {
-			ar.UserData = userId
-			ar.Authorized = true
-			r.server.FinishAuthorizeRequest(resp, c.Request, ar)
 		}
+		ar.UserData = userId
+		ar.Authorized = true
+		r.server.FinishAuthorizeRequest(resp, c.Request, ar)
 	}
 	if resp.IsError && resp.InternalError != nil {
 		log.Printf("ERROR: %s\n", resp.InternalError)
@@ -152,7 +152,7 @@ func (r *rest) AppAuthCode(c *gin.Context) {
 
 	// if parse, download and parse json
 	if c.Query("parse") == "yes" {
-		if err := DownloadAccessToken(authURL, &auth, jr); err != nil {
+		if err := downloadAccessToken(authURL, &auth, jr); err != nil {
 			c.JSON(apihelper.BuildRequestError(err))
 			return
 		}
@@ -210,7 +210,7 @@ func (r *rest) AppAuthPassword(c *gin.Context) {
 	auth := osin.BasicAuth{Username: cc.ClientId, Password: cc.ClientSecret}
 
 	// download token
-	if err := DownloadAccessToken(authURL, &auth, jr); err != nil {
+	if err := downloadAccessToken(authURL, &auth, jr); err != nil {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
 	}
@@ -248,7 +248,7 @@ func (r *rest) AppAuthClientCredentials(c *gin.Context) {
 	auth := osin.BasicAuth{Username: cc.ClientId, Password: cc.ClientSecret}
 
 	// download token
-	err := DownloadAccessToken(authURL, &auth, jr)
+	err := downloadAccessToken(authURL, &auth, jr)
 	if err != nil {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
@@ -290,7 +290,7 @@ func (r *rest) AppAuthAssertion(c *gin.Context) {
 	auth := osin.BasicAuth{Username: cc.ClientId, Password: cc.ClientSecret}
 
 	// download token
-	err := DownloadAccessToken(authURL, &auth, jr)
+	err := downloadAccessToken(authURL, &auth, jr)
 	if err != nil {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
@@ -339,7 +339,7 @@ func (r *rest) AppAuthRefresh(c *gin.Context) {
 	auth := osin.BasicAuth{Username: cc.ClientId, Password: cc.ClientSecret}
 
 	// download token
-	err := DownloadAccessToken(authURL, &auth, jr)
+	err := downloadAccessToken(authURL, &auth, jr)
 	if err != nil {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
@@ -386,7 +386,7 @@ func (r *rest) AppAuthInfo(c *gin.Context) {
 	auth := osin.BasicAuth{Username: cc.ClientId, Password: cc.ClientSecret}
 
 	// download token
-	err := DownloadAccessToken(authURL, &auth, jr)
+	err := downloadAccessToken(authURL, &auth, jr)
 	if err != nil {
 		c.JSON(apihelper.BuildRequestError(err))
 		return
