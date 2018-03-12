@@ -8,11 +8,13 @@ import (
 	"strconv"
 )
 
+// ResponseDTOUserInfo is the object to map JSON response body of a request to get user basic info
 type ResponseDTOUserInfo struct {
 	UserId uint   `json:"user_id"`
 	Email  string `json:"email"`
 }
 
+// RequestDTOCheckCredentials is the object to map JSON request body for login requests
 type RequestDTOCheckCredentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`

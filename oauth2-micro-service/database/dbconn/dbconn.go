@@ -4,6 +4,7 @@ package dbconn
 import (
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
 	"github.com/jinzhu/gorm"
+	// Add postgres for gorm
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"time"
 )
 
+// DB object for repo
 var DB *gorm.DB
 
 // Connect connect to database depending of the env

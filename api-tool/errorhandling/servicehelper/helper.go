@@ -4,6 +4,7 @@ package servicehelper
 // Code describe the status that will be generated in the BuildResponseError for the http response
 type Code uint
 
+// Code describe the status that will be generated in the BuildResponseError for the http response
 const (
 	Processing      Code = 102
 	BadRequest           = 400

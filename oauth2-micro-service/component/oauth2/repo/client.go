@@ -35,10 +35,7 @@ func (s *Storage) UpdateClient(c osin.Client) error {
 	client.RedirectUri = c.GetRedirectUri()
 	client.UserId = userId
 
-	if err := dbconn.DB.Save(&client).Error; err != nil {
-		return err
-	}
-	return nil
+	return dbconn.DB.Save(&client).Error
 }
 
 // CreateClient stores the client in the database and returns an error, if something went wrong.

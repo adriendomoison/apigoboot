@@ -19,6 +19,7 @@ type ServiceInterface interface {
 	IsThatTheUserId(string, uint) (bool, *servicehelper.Error)
 }
 
+// RequestDTOCreation is the object to map JSON request body of a profile creation request
 type RequestDTOCreation struct {
 	PublicId          string `json:"profile_id"`
 	FirstName         string `json:"first_name" binding:"required,min=2"`
@@ -28,6 +29,7 @@ type RequestDTOCreation struct {
 	Birthday          string `json:"birthday" binding:"required,min=10"`
 }
 
+// RequestDTO is the object to map JSON request body
 type RequestDTO struct {
 	PublicId          string `json:"profile_id" binding:"required,min=16"`
 	FirstName         string `json:"first_name" binding:"required,min=2"`
@@ -36,6 +38,7 @@ type RequestDTO struct {
 	Birthday          string `json:"birthday" binding:"required,min=10"`
 }
 
+// ResponseDTO is the object to map JSON response body
 type ResponseDTO struct {
 	PublicId          string `json:"profile_id"`
 	FirstName         string `json:"first_name"`
@@ -44,11 +47,6 @@ type ResponseDTO struct {
 	ProfilePictureUrl string `json:"profile_picture_url"`
 	Birthday          string `json:"birthday"`
 	OrderAmount       uint   `json:"order_amount"`
-}
-
-type ResponseDTOUserInfo struct {
-	Email  string `json:"email"`
-	UserId uint   `json:"user_id"`
 }
 
 // Make sure the interface is implemented correctly

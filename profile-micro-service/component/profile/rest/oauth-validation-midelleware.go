@@ -10,6 +10,12 @@ import (
 	"net/http"
 )
 
+// ResponseDTOUserInfo is the object to map JSON response body when requesting basic user info
+type ResponseDTOUserInfo struct {
+	Email  string `json:"email"`
+	UserId uint   `json:"user_id"`
+}
+
 func askOauthServiceForTokenOwnerUserId(token string) (uint, int, *apihelper.ApiErrors) {
 
 	req, err := http.NewRequest("GET", config.GAppUrl+"/api/private-v1/access-token/"+token+"/get-owner", nil)
@@ -36,6 +42,7 @@ func askOauthServiceForTokenOwnerUserId(token string) (uint, int, *apihelper.Api
 	return accessTokenOwner.UserId, 0, nil
 }
 
+// ValidateAccessToken check oauth2 access token (middleware)
 func (r *rest) ValidateAccessToken(c *gin.Context) {
 
 	authorizationCode := c.Request.Header.Get("Authorization")

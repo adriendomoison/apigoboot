@@ -25,6 +25,7 @@ type rest struct {
 	service ServiceInterface
 }
 
+// clientCredential is the object to map JSON request body of an oauth2
 type clientCredential struct {
 	Method       string `json:"method"`
 	Username     string `json:"username"`
@@ -33,12 +34,14 @@ type clientCredential struct {
 	ClientSecret string `json:"client_secret"`
 }
 
+// RequestDTOUserCredentials is the object to map JSON request body of a login request
 type RequestDTOUserCredentials struct {
 	Method   string `json:"method"`
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
+// ResponseDTOUserInfo is the object to map JSON response body of a request to get user basic info
 type ResponseDTOUserInfo struct {
 	UserId uint   `json:"user_id"`
 	Email  string `json:"email"`

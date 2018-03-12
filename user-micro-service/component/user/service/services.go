@@ -19,6 +19,7 @@ type RepoInterface interface {
 	Delete(user Entity) error
 }
 
+// Entity is the model of a user in the database
 type Entity struct {
 	gorm.Model
 	Email    string `gorm:"NOT NULL;UNIQUE"`
@@ -26,6 +27,7 @@ type Entity struct {
 	Password string `gorm:"NOT NULL"`
 }
 
+// TableName allow to gives a specific name to the user table
 func (Entity) TableName() string {
 	return "user"
 }

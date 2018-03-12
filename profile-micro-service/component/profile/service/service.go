@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+// RepoInterface is the model for the repo package of profile
 type RepoInterface interface {
 	Create(profile Entity) bool
 	FindByID(id uint) (profile Entity, err error)
@@ -19,7 +20,7 @@ type RepoInterface interface {
 	Delete(profile Entity) error
 }
 
-// Entity is the model of profile for the database
+// Entity is the model of a profile in the database
 type Entity struct {
 	gorm.Model
 	PublicId          string `gorm:"UNIQUE;NOT NULL"`
@@ -31,6 +32,7 @@ type Entity struct {
 	UserID            uint
 }
 
+// TableName allow to gives a specific name to the profile table
 func (Entity) TableName() string {
 	return "profile"
 }

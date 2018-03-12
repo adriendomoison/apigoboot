@@ -25,12 +25,14 @@ type ServiceInterface interface {
 	RetrieveUserInfoByUserId(userId uint) (resDTO ResponseDTOUserInfo, error *servicehelper.Error)
 }
 
+// RequestDTO is the object to map JSON request body
 type RequestDTO struct {
 	Username string `json:"username"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
 }
 
+// RequestDTOWithProfile is the object to map JSON request body when a profile is added to the request
 type RequestDTOWithProfile struct {
 	Username  string `json:"username"`
 	Email     string `json:"email" binding:"required,email"`
@@ -40,23 +42,27 @@ type RequestDTOWithProfile struct {
 	Birthday  string `json:"birthday" binding:"required,min=10"`
 }
 
+// RequestDTOPutEmail is the object to map JSON request body for requests to edit the email of a user
 type RequestDTOPutEmail struct {
 	Email    string `json:"email" binding:"required,email"`
 	NewEmail string `json:"new_email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
 }
 
+// RequestDTOPutPassword is the object to map JSON request body for requests to edit the email of a user
 type RequestDTOPutPassword struct {
 	Email       string `json:"email" binding:"required,email"`
 	Password    string `json:"password" binding:"required,min=8"`
 	NewPassword string `json:"new_password" binding:"required,min=8"`
 }
 
+// ResponseDTO is the object to map JSON response body
 type ResponseDTO struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 }
 
+// ResponseDTO is the object to map JSON response body when a profile is added to the response
 type ResponseDTOWithProfile struct {
 	PublicId  string `json:"profile_id"`
 	Username  string `json:"username"`
