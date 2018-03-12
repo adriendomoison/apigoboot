@@ -1,6 +1,6 @@
 # ApiGoBoot - WIP - Looking for inputs & code reviews! 🚀❤️️🚀❤️🚀
 
-[![Build Status](https://travis-ci.org/adriendomoison/apigoboot.svg?branch=master)](https://travis-ci.org/adriendomoison/apigoboot) [![GoDoc](https://godoc.org/github.com/adriendomoison/apigoboot?status.svg)](https://godoc.org/github.com/adriendomoison/apigoboot) [![Go Report Card](https://goreportcard.com/badge/github.com/adriendomoison/apigoboot)](https://goreportcard.com/report/github.com/adriendomoison/apigoboot)
+[![Build Status](https://travis-ci.org/adriendomoison/apigoboot.svg?branch=master)](https://travis-ci.org/adriendomoison/apigoboot) [![Coverage Status](https://coveralls.io/repos/github/adriendomoison/apigoboot/badge.svg?branch=master)](https://coveralls.io/github/adriendomoison/apigoboot?branch=master) [![GoDoc](https://godoc.org/github.com/adriendomoison/apigoboot?status.svg)](https://godoc.org/github.com/adriendomoison/apigoboot) [![Go Report Card](https://goreportcard.com/badge/github.com/adriendomoison/apigoboot)](https://goreportcard.com/report/github.com/adriendomoison/apigoboot) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This is a playground for a boilerplate API in Go using a micro service oriented architecture. The architecture will be updated depending on what I'll be reading/learning on the web.
 
