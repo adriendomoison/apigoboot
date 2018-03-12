@@ -1,7 +1,5 @@
-/*
-	msutils add string generation, modification and conversion capabilities
-*/
-package api_tool
+// Package gentool add string generation, modification and conversion capabilities
+package gentool
 
 import (
 	"math/rand"

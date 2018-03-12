@@ -1,6 +1,4 @@
-/*
-	config generate the environment of the API
-*/
+// Package config generate the environment of the API
 package config
 
 import (

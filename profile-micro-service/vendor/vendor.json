@@ -3,6 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "CrjtQQ18DMxo17oAY4Fb4/TzO88=",
+			"path": "github.com/adriendomoison/apigoboot/api-tool/gentool",
+			"revision": "021c068975e137029f3bae3e6fc79c114892d815",
+			"revisionTime": "2018-03-12T03:17:00Z"
+		},
+		{
 			"checksumSHA1": "0T/aGSd6oCDpVAWYwrCMo0Wz2tE=",
 			"path": "github.com/adriendomoison/apigoboot/errorhandling/apihelper",
 			"revision": "44a8a9fc5d9c88c9bcc55562774bd01f45871cf5",

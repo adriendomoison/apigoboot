@@ -1,6 +1,4 @@
-/*
-	apihelper automate construction of http response
-*/
+// Package apihelper automate construction of http response
 package apihelper
 
 import (

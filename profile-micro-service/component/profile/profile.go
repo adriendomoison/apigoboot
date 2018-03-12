@@ -1,6 +1,4 @@
-/*
-	Package profile is a component to manage the profile of a user
-*/
+// Package profile is a component to manage the profile of a user
 package profile
 
 import (

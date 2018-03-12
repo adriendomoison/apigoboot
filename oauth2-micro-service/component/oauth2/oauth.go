@@ -1,6 +1,4 @@
-/*
-	Package oauth2 handle Authentication with OAuth2.0
-*/
+// Package oauth2 handle Authentication with OAuth2.0
 package oauth2
 
 import (

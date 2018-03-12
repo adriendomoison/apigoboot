@@ -1,6 +1,4 @@
-/*
-	core of the API
-*/
+// Package rest implement routes
 package rest
 
 import (

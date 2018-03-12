@@ -1,6 +1,4 @@
-/*
-	Package service implement the services required by the rest package
-*/
+// Package service implement the services required by the rest package
 package service
 
 import (

@@ -1,3 +1,4 @@
+// Package core init the api gateway
 package core
 
 import (

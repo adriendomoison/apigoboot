@@ -1,3 +1,4 @@
+// Package dbconn allows connection to db
 package dbconn
 
 import (

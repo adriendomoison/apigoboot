@@ -1,13 +1,11 @@
-/*
-	Package service implement the services required by the rest package
-*/
+// Package service implement the services required by the rest package
 package service
 
 import (
 	"errors"
+	"github.com/adriendomoison/apigoboot/api-tool/gentool"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
-	"github.com/adriendomoison/apigoboot/tool"
 	"github.com/jinzhu/copier"
 	"github.com/jinzhu/gorm"
 	"time"
@@ -95,7 +93,7 @@ func createEntityFromDTO(reqDTO rest.RequestDTOCreation, init bool) (entity Enti
 			}
 		}
 		entity.UserID = userInfo.UserId
-		entity.PublicId = tool.GenerateRandomString(16)
+		entity.PublicId = gentool.GenerateRandomString(16)
 		entity.OrderAmount = 0
 		entity.ProfilePictureUrl = "https://x1.xingassets.com/assets/frontend_minified/img/users/nobody_m.original.jpg"
 	}

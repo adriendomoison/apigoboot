@@ -1,6 +1,4 @@
-/*
-	Package user is a component to manage a user
-*/
+// Package user is a component to manage a user
 package user
 
 import (

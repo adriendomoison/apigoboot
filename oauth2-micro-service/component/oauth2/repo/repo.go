@@ -1,6 +1,4 @@
-/*
-	Package repo implement the function that contact the db required by the service package
-*/
+// Package repo implement the function that contact the db required by the service package
 package repo
 
 import (

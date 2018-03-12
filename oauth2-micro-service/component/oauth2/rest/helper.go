@@ -1,6 +1,4 @@
-/*
-	Package rest implement the callback required by the oauth2 package
-*/
+// Package rest implement the callback required by the oauth2 package
 package rest
 
 import (
