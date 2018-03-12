@@ -14,10 +14,13 @@ var prodAppUrl = "https://apigoboot.herokuapp.com"
 
 // GDevEnv define if environment is in dev mode
 var GDevEnv bool
+
 // GUnitTestingEnv define if environment is in testing mode
 var GUnitTestingEnv bool
+
 // GPort is the application current port
 var GPort string
+
 // GAppUrl is the application url
 var GAppUrl string
 

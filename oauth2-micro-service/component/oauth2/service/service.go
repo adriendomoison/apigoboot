@@ -13,6 +13,7 @@ import (
 	"net/http"
 )
 
+// RepoInterface is the model for the repo package of oauth2
 type RepoInterface interface {
 	FindByAccessToken(token string) (Access, error)
 }

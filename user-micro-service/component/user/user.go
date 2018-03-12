@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RestInterface is the model for the rest package of user
 type RestInterface interface {
 	Post(c *gin.Context)
 	Get(c *gin.Context)

@@ -13,6 +13,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+// RepoInterface is the model for the repo package of user
 type RepoInterface interface {
 	Create(user Entity) bool
 	FindByID(id uint) (user Entity, err error)

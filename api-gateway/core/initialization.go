@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-// startAPI start the API and keep it alive
+// StartAPIGateway start the API and keep it alive
 func StartAPIGateway() {
 
 	// Init router

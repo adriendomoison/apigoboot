@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+// ServiceInterface is the model for the service package of profile
 type ServiceInterface interface {
 	GetResourceOwnerId(email string) uint
 	Add(creation RequestDTOCreation) (ResponseDTO, *servicehelper.Error)

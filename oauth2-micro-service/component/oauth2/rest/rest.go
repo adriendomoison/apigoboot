@@ -13,6 +13,7 @@ import (
 	"net/url"
 )
 
+// ServiceInterface is the model for the service package of oauth2
 type ServiceInterface interface {
 	AskUserServiceToCheckCredentials(username string, password string, method string) (ResponseDTOUserInfo, *apihelper.ApiErrors)
 	GetResourceOwnerId(token string) (ResponseDTOUserInfo, *servicehelper.Error)
