@@ -1,6 +1,5 @@
 /*
-	service do the link in between the web and the database for the user profile.
-	It is responsible to handle data and transform them to be readable either from the database to the web or from the web to the database
+	Package service implement the services required by the rest package
 */
 package service
 

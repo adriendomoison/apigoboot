@@ -1,3 +1,6 @@
+/*
+	Package rest implement the callback required by the user package
+*/
 package rest
 
 import (

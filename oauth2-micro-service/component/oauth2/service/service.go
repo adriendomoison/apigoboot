@@ -1,3 +1,6 @@
+/*
+	Package service implement the services required by the rest package
+*/
 package service
 
 import (
@@ -59,7 +62,7 @@ type Refresh struct {
 	Access string `gorm:"NOT NULL"`
 }
 
-var PrivateBaseUrl = config.GAppUrl + "/api/private-v1"
+var privateBaseUrl = config.GAppUrl + "/api/private-v1"
 
 var _ rest.ServiceInterface = (*service)(nil)
 
@@ -83,7 +86,7 @@ func (s *service) AskUserServiceToCheckCredentials(username string, password str
 	json.NewEncoder(b).Encode(requestBody)
 
 	// call api
-	req, err := http.NewRequest("POST", PrivateBaseUrl+"/user/check-credentials", b)
+	req, err := http.NewRequest("POST", privateBaseUrl+"/user/check-credentials", b)
 	req.Header.Set("Authorization", "Bearer YYY")
 
 	client := &http.Client{}

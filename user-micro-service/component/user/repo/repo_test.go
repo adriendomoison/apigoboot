@@ -1,6 +1,7 @@
-package repo
+package repo_test
 
 import (
+	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/repo"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/service"
 	"github.com/adriendomoison/apigoboot/user-micro-service/config"
 	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
@@ -8,14 +9,12 @@ import (
 	"testing"
 )
 
-var r *repo
+var r = repo.New()
 
 func TestMain(m *testing.M) {
 	config.SetToTestingEnv()
 	dbconn.Connect()
 	defer dbconn.DB.Close()
-
-	r = New()
 
 	code := m.Run()
 

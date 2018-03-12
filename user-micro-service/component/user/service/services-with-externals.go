@@ -1,3 +1,6 @@
+/*
+	Package service implement the services required by the rest package
+*/
 package service
 
 import (
@@ -12,7 +15,7 @@ import (
 	"net/http"
 )
 
-var BaseUrl = config.GAppUrl + "/api/private-v1"
+var baseUrl = config.GAppUrl + "/api/private-v1"
 
 // AddWithProfile set up and create a user with a profile
 func (s *service) AddWithProfile(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTOWithProfile, *servicehelper.Error) {
@@ -63,7 +66,7 @@ func callPostProfileService(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTO
 	json.NewEncoder(b).Encode(reqDTO)
 
 	// call api
-	req, err := http.NewRequest("POST", BaseUrl+"/profiles", b)
+	req, err := http.NewRequest("POST", baseUrl+"/profiles", b)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -87,7 +90,7 @@ func callPostProfileService(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTO
 func callGetProfileService(email string) (rest.ResponseDTOWithProfile, apihelper.ApiErrors, int) {
 
 	// call api
-	req, err := http.NewRequest("GET", BaseUrl+"/profiles/"+email, nil)
+	req, err := http.NewRequest("GET", baseUrl+"/profiles/"+email, nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

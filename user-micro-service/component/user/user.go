@@ -1,5 +1,5 @@
 /*
-	user component
+	Package user is a component to manage a user
 */
 package user
 

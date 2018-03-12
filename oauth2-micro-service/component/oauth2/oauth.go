@@ -1,5 +1,5 @@
 /*
-	Authentication with OAuth2.0 package
+	Package oauth2 handle Authentication with OAuth2.0
 */
 package oauth2
 
@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// RestInterface is the model for the rest package of oauth2
 type RestInterface interface {
 	AppAuthorize(c *gin.Context)
 	AppToken(c *gin.Context)

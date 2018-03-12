@@ -1,3 +1,6 @@
+/*
+	Package service implement the services required by the rest package
+*/
 package service
 
 import (
@@ -12,39 +15,39 @@ import (
 	"strconv"
 )
 
-var BaseUrl = config.GAppUrl + "/api/private-v1"
+var baseUrl = config.GAppUrl + "/api/private-v1"
 
 func askUserServiceForUserId(email string) (rest.ResponseDTOUserInfo, *servicehelper.Error) {
-	if resDTO, apiErrors, statusCode := callGetUserIdService(email); len(apiErrors.Errors) > 0 {
+	resDTO, apiErrors, statusCode := callGetUserIdService(email)
+	if len(apiErrors.Errors) > 0 {
 		return rest.ResponseDTOUserInfo{}, &servicehelper.Error{
 			Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
 			Message: apiErrors.Errors[0].(apihelper.Error).Message,
 			Param:   apiErrors.Errors[0].(apihelper.Error).Param,
 			Code:    servicehelper.Code(statusCode),
 		}
-	} else {
-		return resDTO, nil
 	}
+	return resDTO, nil
 }
 
 func askUserServiceForUserEmail(userId uint) (rest.ResponseDTOUserInfo, *servicehelper.Error) {
-	if resDTO, apiErrors, statusCode := callGetUserEmailService(userId); len(apiErrors.Errors) > 0 {
+	resDTO, apiErrors, statusCode := callGetUserEmailService(userId)
+	if len(apiErrors.Errors) > 0 {
 		return rest.ResponseDTOUserInfo{}, &servicehelper.Error{
 			Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
 			Message: apiErrors.Errors[0].(apihelper.Error).Message,
 			Param:   apiErrors.Errors[0].(apihelper.Error).Param,
 			Code:    servicehelper.Code(statusCode),
 		}
-	} else {
-		return resDTO, nil
 	}
+	return resDTO, nil
 }
 
 // callGetUserIdService ask the user micro service for a user id
 func callGetUserIdService(email string) (rest.ResponseDTOUserInfo, apihelper.ApiErrors, int) {
 
 	// call api
-	req, err := http.NewRequest("GET", BaseUrl+"/user/email/"+email, nil)
+	req, err := http.NewRequest("GET", baseUrl+"/user/email/"+email, nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -68,7 +71,7 @@ func callGetUserIdService(email string) (rest.ResponseDTOUserInfo, apihelper.Api
 func callGetUserEmailService(userId uint) (rest.ResponseDTOUserInfo, apihelper.ApiErrors, int) {
 
 	// call api
-	req, err := http.NewRequest("GET", BaseUrl+"/user/id/"+strconv.Itoa(int(userId)), nil)
+	req, err := http.NewRequest("GET", baseUrl+"/user/id/"+strconv.Itoa(int(userId)), nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
