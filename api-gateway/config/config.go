@@ -8,22 +8,24 @@ import (
 	"os"
 )
 
-var GDevPort = "4000"
-var GDevAppUrl = "http://api.go.boot"
-var GProdAppUrl = "https://apigoboot.herokuapp.com"
+var devPort = "4000"
+var devAppUrl = "http://api.go.boot"
+var prodAppUrl = "https://apigoboot.herokuapp.com"
 
+// GPort is the application current port
 var GPort string
+// GAppUrl is the application url
 var GAppUrl string
 
 // init initialize the default environment
 func init() {
 	GPort = os.Getenv("PORT")
 	if GPort == "" {
-		GPort = GDevPort
-		GAppUrl = GDevAppUrl + ":" + GPort
+		GPort = devPort
+		GAppUrl = devAppUrl + ":" + GPort
 		log.Println("Dev Environnement detected")
 	} else {
-		GAppUrl = GProdAppUrl
+		GAppUrl = prodAppUrl
 		log.Println("Heroku Environement detected")
 	}
 }

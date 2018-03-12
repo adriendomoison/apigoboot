@@ -5,14 +5,20 @@ import (
 	"os"
 )
 
+// GAppName define the app name
 var GAppName = "apigoboot"
-var GDevPort = "4201"
-var GDevAppUrl = "http://api.go.boot"
-var GProdAppUrl = "https://apigoboot.herokuapp.com"
 
+var devPort = "4201"
+var devAppUrl = "http://api.go.boot"
+var prodAppUrl = "https://apigoboot.herokuapp.com"
+
+// GDevEnv define if environment is in dev mode
 var GDevEnv bool
+// GUnitTestingEnv define if environment is in testing mode
 var GUnitTestingEnv bool
+// GPort is the application current port
 var GPort string
+// GAppUrl is the application url
 var GAppUrl string
 
 // init initialize the default environment
@@ -20,12 +26,12 @@ func init() {
 	GPort = os.Getenv("PORT")
 	if GPort == "" {
 		GDevEnv = true
-		GPort = GDevPort
-		GAppUrl = GDevAppUrl + ":" + GPort
+		GPort = devPort
+		GAppUrl = devAppUrl + ":" + GPort
 		log.Println("Dev Environnement detected")
 	} else {
 		GDevEnv = false
-		GAppUrl = GProdAppUrl
+		GAppUrl = prodAppUrl
 		log.Println("Heroku Environement detected")
 	}
 }

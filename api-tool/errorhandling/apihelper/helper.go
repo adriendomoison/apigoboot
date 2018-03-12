@@ -70,6 +70,8 @@ func BuildResponseError(err *servicehelper.Error) (status int, apiErrors ApiErro
 	return int(err.Code), apiErrors
 }
 
+// GetBoolQueryParam allow to retrieve a boolean query parameter.
+// It takes the gin contect as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
 func GetBoolQueryParam(c *gin.Context, value *bool, queryParam string, defaultValue bool) bool {
 	var err error
 	if c.Query(queryParam) != "" {

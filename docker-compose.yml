@@ -13,7 +13,7 @@ services:
 
   api_gateway:
     build:
-      context: api-gateway
+      context: ./api-gateway
     volumes:
       - ./api-gateway:/go/src/github.com/adriendomoison/apigoboot/api-gateway/
     ports:
