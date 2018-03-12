@@ -4,8 +4,8 @@
 package config
 
 import (
-	"os"
 	"log"
+	"os"
 )
 
 var GDevPort = "4000"

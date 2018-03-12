@@ -1,11 +1,11 @@
 package rest
 
 import (
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type ServiceInterface interface {
@@ -13,7 +13,7 @@ type ServiceInterface interface {
 	Add(creation RequestDTOCreation) (ResponseDTO, *servicehelper.Error)
 	Retrieve(string) (ResponseDTO, *servicehelper.Error)
 	Edit(RequestDTO) (ResponseDTO, *servicehelper.Error)
-	Remove(string) (*servicehelper.Error)
+	Remove(string) *servicehelper.Error
 	IsThatTheUserId(string, uint) (bool, *servicehelper.Error)
 }
 

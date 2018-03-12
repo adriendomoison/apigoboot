@@ -1,15 +1,15 @@
 package main
 
 import (
-	"log"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/database/dbconn"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/repo"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/service"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/service"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/database/dbconn"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"log"
 )
 
 // startAPI start the API and keep it alive

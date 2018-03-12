@@ -1,10 +1,10 @@
 package rest
 
 import (
-	"strconv"
-	"net/http"
-	"github.com/gin-gonic/gin"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
 
 type ResponseDTOUserInfo struct {

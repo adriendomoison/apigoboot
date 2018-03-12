@@ -1,16 +1,16 @@
 package rest
 
 import (
-	"log"
 	"fmt"
-	"net/url"
-	"net/http"
-	"github.com/gin-gonic/gin"
-	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
+	"github.com/gin-gonic/gin"
+	"github.com/go-errors/errors"
+	"log"
+	"net/http"
+	"net/url"
 )
 
 type ServiceInterface interface {
@@ -397,7 +397,7 @@ func (r *rest) AppAuthInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, jr)
 }
 
-func (r* rest) GetAccessTokenOwnerUserId(c *gin.Context) {
+func (r *rest) GetAccessTokenOwnerUserId(c *gin.Context) {
 	if resDTO, err := r.service.GetResourceOwnerId(c.Param("accessToken")); err != nil {
 		c.JSON(apihelper.BuildResponseError(err))
 	} else {

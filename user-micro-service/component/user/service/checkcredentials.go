@@ -1,17 +1,17 @@
 package service
 
 import (
-	"os"
-	"errors"
 	"context"
-	"io/ioutil"
 	"encoding/json"
+	"errors"
+	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
+	"github.com/elithrar/simple-scrypt"
+	"github.com/huandu/facebook"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	"github.com/huandu/facebook"
-	"github.com/elithrar/simple-scrypt"
-	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"io/ioutil"
+	"os"
 )
 
 // CheckCredentials redirect user authentication to the right method depending of the authType

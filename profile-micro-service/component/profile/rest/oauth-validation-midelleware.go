@@ -1,12 +1,12 @@
 package rest
 
 import (
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
+	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"net/http"
 )
 
 func askOauthServiceForTokenOwnerUserId(token string) (uint, int, *apihelper.ApiErrors) {
@@ -24,7 +24,9 @@ func askOauthServiceForTokenOwnerUserId(token string) (uint, int, *apihelper.Api
 
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	accessTokenOwner := struct{ UserId uint `json:"user_id"` }{}
+	accessTokenOwner := struct {
+		UserId uint `json:"user_id"`
+	}{}
 	if json.Unmarshal(body, &accessTokenOwner) != nil {
 		apiErrors := apihelper.ApiErrors{}
 		json.Unmarshal(body, &apiErrors)

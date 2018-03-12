@@ -1,16 +1,16 @@
 package main
 
 import (
-	"log"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
 	"github.com/RangelReale/osin"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/repo"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/repo"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"log"
 )
 
 // startAPI start the API and keep it alive

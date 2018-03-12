@@ -2,14 +2,14 @@ package service
 
 import (
 	"bytes"
-	"errors"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
+	"errors"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
-	"github.com/adriendomoison/apigoboot/user-micro-service/config"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
+	"github.com/adriendomoison/apigoboot/user-micro-service/config"
+	"io/ioutil"
+	"net/http"
 )
 
 var BaseUrl = config.GAppUrl + "/api/private-v1"

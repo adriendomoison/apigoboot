@@ -1,25 +1,25 @@
 package main_test
 
 import (
-	"os"
-	"time"
 	"bytes"
-	"testing"
-	"strings"
-	"net/url"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
 	"github.com/RangelReale/osin"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/repo"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/repo"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"os"
+	"strings"
+	"testing"
+	"time"
 )
 
 var PublicBaseUrl = config.GAppUrl + "/authentication"
@@ -87,7 +87,7 @@ func CheckCredentialsMock(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, rest.ResponseDTOUserInfo{
 			UserId: 1,
-			Email: "test00@example.dev",
+			Email:  "test00@example.dev",
 		})
 	}
 	return

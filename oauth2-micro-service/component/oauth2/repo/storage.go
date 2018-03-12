@@ -3,8 +3,8 @@ package repo
 import (
 	"database/sql"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
 )
 
 // Make sure the interface is implemented correctly

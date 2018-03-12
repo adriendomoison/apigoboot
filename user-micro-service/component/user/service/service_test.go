@@ -1,12 +1,12 @@
 package service
 
 import (
-	"os"
-	"testing"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
 	"github.com/adriendomoison/apigoboot/user-micro-service/config"
 	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
-	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
+	"os"
+	"testing"
 )
 
 var email = "john.doe@example.dev"

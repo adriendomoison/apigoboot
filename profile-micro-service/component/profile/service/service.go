@@ -5,13 +5,13 @@
 package service
 
 import (
-	"time"
 	"errors"
-	"github.com/jinzhu/gorm"
-	"github.com/jinzhu/copier"
-	"github.com/adriendomoison/apigoboot/tool"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
+	"github.com/adriendomoison/apigoboot/tool"
+	"github.com/jinzhu/copier"
+	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type RepoInterface interface {

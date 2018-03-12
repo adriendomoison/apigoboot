@@ -1,11 +1,11 @@
 package repo
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/RangelReale/osin"
-	"github.com/go-errors/errors"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
+	"github.com/go-errors/errors"
+	"github.com/jinzhu/gorm"
 )
 
 // LoadRefresh retrieves refresh AccessData. Client information MUST be loaded together.

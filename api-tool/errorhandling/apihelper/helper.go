@@ -5,14 +5,13 @@ package apihelper
 
 import (
 	"errors"
-	"regexp"
-	"strings"
-	"strconv"
-	"net/http"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/go-playground/validator.v8"
-	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
-
+	"net/http"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 // Interface for all API error messages

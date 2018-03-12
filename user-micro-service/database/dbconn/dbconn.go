@@ -1,13 +1,13 @@
 package dbconn
 
 import (
-	"os"
-	"log"
-	"time"
-	"syscall"
+	"github.com/adriendomoison/apigoboot/user-micro-service/config"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"github.com/adriendomoison/apigoboot/user-micro-service/config"
+	"log"
+	"os"
+	"syscall"
+	"time"
 )
 
 var DB *gorm.DB

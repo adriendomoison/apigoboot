@@ -1,11 +1,11 @@
 package core
 
 import (
-	"log"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
-	"github.com/adriendomoison/apigoboot/api-gateway/rest"
 	"github.com/adriendomoison/apigoboot/api-gateway/config"
+	"github.com/adriendomoison/apigoboot/api-gateway/rest"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"log"
 )
 
 // startAPI start the API and keep it alive

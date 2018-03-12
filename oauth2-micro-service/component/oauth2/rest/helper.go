@@ -1,12 +1,12 @@
 package rest
 
 import (
-	"errors"
-	"net/http"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
+	"errors"
 	"github.com/RangelReale/osin"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func HandleLoginPage(r *rest, ar *osin.AuthorizeRequest, c *gin.Context) (uint, bool) {
@@ -24,8 +24,8 @@ func HandleLoginPage(r *rest, ar *osin.AuthorizeRequest, c *gin.Context) (uint, 
 	c.HTML(http.StatusOK, "authentication.tmpl", gin.H{
 		"client_id":     ar.Client.GetId(),
 		"authorize_url": c.Request.URL,
-		"error_status": errorStatus,
-		"errors": errorList,
+		"error_status":  errorStatus,
+		"errors":        errorList,
 	})
 	return 0, false
 }

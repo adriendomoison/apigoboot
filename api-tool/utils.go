@@ -4,8 +4,8 @@
 package api_tool
 
 import (
-	"time"
 	"math/rand"
+	"time"
 )
 
 // GenerateRandomString create a random string of the requested length using the hexadecimal symbols

@@ -1,24 +1,24 @@
 package main_test
 
 import (
-	"io"
-	"os"
-	"time"
 	"bytes"
-	"strconv"
-	"testing"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/database/dbconn"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/repo"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/service"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/repo"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
+	"github.com/adriendomoison/apigoboot/profile-micro-service/database/dbconn"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strconv"
+	"testing"
+	"time"
 )
 
 var PublicBaseUrl = config.GAppUrl + "/api/v1"
@@ -282,7 +282,7 @@ func TestPutMissingParam(t *testing.T) {
 
 	// build JSON request body
 	requestBody := rest.RequestDTO{
-		PublicId:          publicId,
+		PublicId: publicId,
 	}
 
 	// call api
@@ -314,7 +314,7 @@ func TestPutMissingParam(t *testing.T) {
 	} else if len(apiErrors.Errors) == 0 {
 		t.Errorf("Expected %s to be %s, got %s", "apiErrors.Errors", "containing errors", "no errors")
 	} else if len(apiErrors.Errors) != 4 {
-		t.Errorf("Expected %s to be %s, got %s", "apiErrors.Errors", "containing 4 errors", strconv.Itoa(len(apiErrors.Errors)) + " errors")
+		t.Errorf("Expected %s to be %s, got %s", "apiErrors.Errors", "containing 4 errors", strconv.Itoa(len(apiErrors.Errors))+" errors")
 	}
 }
 

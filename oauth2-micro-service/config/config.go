@@ -1,8 +1,8 @@
 package config
 
 import (
-	"os"
 	"log"
+	"os"
 )
 
 var GAppName = "apigoboot"

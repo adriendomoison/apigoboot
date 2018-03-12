@@ -6,11 +6,11 @@ package service
 
 import (
 	"errors"
-	"github.com/jinzhu/gorm"
-	"github.com/jinzhu/copier"
-	"github.com/elithrar/simple-scrypt"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
+	"github.com/elithrar/simple-scrypt"
+	"github.com/jinzhu/copier"
+	"github.com/jinzhu/gorm"
 )
 
 type RepoInterface interface {

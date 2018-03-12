@@ -2,15 +2,15 @@ package service
 
 import (
 	"bytes"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
-	"github.com/jinzhu/gorm"
-	"github.com/go-errors/errors"
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
+	"github.com/go-errors/errors"
+	"github.com/jinzhu/gorm"
+	"io/ioutil"
+	"net/http"
 )
 
 type RepoInterface interface {

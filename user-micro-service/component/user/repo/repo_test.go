@@ -1,11 +1,11 @@
 package repo
 
 import (
-	"os"
-	"testing"
+	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/service"
 	"github.com/adriendomoison/apigoboot/user-micro-service/config"
 	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
-	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/service"
+	"os"
+	"testing"
 )
 
 var r *repo

@@ -1,12 +1,12 @@
 package repo
 
 import (
-	"time"
-	"github.com/jinzhu/copier"
-	"github.com/go-errors/errors"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/service"
+	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
+	"github.com/go-errors/errors"
+	"github.com/jinzhu/copier"
+	"time"
 )
 
 // SaveAuthorize saves authorize data.

@@ -1,8 +1,8 @@
 package repo
 
 import (
-	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/service"
+	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
 )
 
 // Make sure the interface is implemented correctly
