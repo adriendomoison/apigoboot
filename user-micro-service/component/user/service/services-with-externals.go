@@ -8,12 +8,12 @@ import (
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
-	"github.com/adriendomoison/apigoboot/user-micro-service/config"
 	"io/ioutil"
 	"net/http"
 )
 
-var baseUrl = config.GAppUrl + "/api/private-v1"
+// TODO make it "http://api.profile.apigoboot/api/private-v1/profiles"
+var profileBaseUrl = "http://api.profile:4200/api/private-v1/profiles"
 
 // AddWithProfile set up and create a user with a profile
 func (s *service) AddWithProfile(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTOWithProfile, *servicehelper.Error) {
@@ -25,13 +25,20 @@ func (s *service) AddWithProfile(reqDTO rest.RequestDTOWithProfile) (rest.Respon
 		return rest.ResponseDTOWithProfile{}, err
 	}
 	resDTO, apiErrors, statusCode := callPostProfileService(reqDTO)
-	if len(apiErrors.Errors) > 0 {
-		s.Remove(resDTO.Email)
+	if statusCode != http.StatusCreated {
+		s.Remove(reqDTO.Email)
+		if len(apiErrors.Errors) > 0 {
+			return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
+				Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
+				Message: apiErrors.Errors[0].(apihelper.Error).Message,
+				Param:   apiErrors.Errors[0].(apihelper.Error).Param,
+				Code:    servicehelper.Code(statusCode),
+			}
+		}
 		return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
-			Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
-			Message: apiErrors.Errors[0].(apihelper.Error).Message,
-			Param:   apiErrors.Errors[0].(apihelper.Error).Param,
-			Code:    servicehelper.Code(statusCode),
+			Detail:  errors.New("server unavailable"),
+			Message: "Please try again later",
+			Code:    servicehelper.UnexpectedError,
 		}
 	}
 	return resDTO, nil
@@ -43,13 +50,20 @@ func (s *service) RetrieveWithProfile(email string) (rest.ResponseDTOWithProfile
 		return rest.ResponseDTOWithProfile{}, err
 	}
 	resDTO, apiErrors, statusCode := callGetProfileService(email)
-	if len(apiErrors.Errors) > 0 {
+	if statusCode != http.StatusOK {
 		s.Remove(resDTO.Email)
+		if len(apiErrors.Errors) > 0 {
+			return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
+				Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
+				Message: apiErrors.Errors[0].(apihelper.Error).Message,
+				Param:   apiErrors.Errors[0].(apihelper.Error).Param,
+				Code:    servicehelper.Code(statusCode),
+			}
+		}
 		return rest.ResponseDTOWithProfile{}, &servicehelper.Error{
-			Detail:  errors.New(apiErrors.Errors[0].(apihelper.Error).Detail),
-			Message: apiErrors.Errors[0].(apihelper.Error).Message,
-			Param:   apiErrors.Errors[0].(apihelper.Error).Param,
-			Code:    servicehelper.Code(statusCode),
+			Detail:  errors.New("server unavailable"),
+			Message: "Please try again later",
+			Code:    servicehelper.UnexpectedError,
 		}
 	}
 	return resDTO, nil
@@ -62,12 +76,16 @@ func callPostProfileService(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTO
 	json.NewEncoder(b).Encode(reqDTO)
 
 	// call api
-	req, err := http.NewRequest("POST", baseUrl+"/profiles", b)
+	req, err := http.NewRequest("POST", profileBaseUrl, b)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		var apiError apihelper.ApiErrors
+		apiError.Errors = append(apiError.Errors, apihelper.Error{
+			Detail: err.Error(),
+		})
+		return rest.ResponseDTOWithProfile{}, apiError, http.StatusInternalServerError
 	}
 	defer resp.Body.Close()
 
@@ -86,7 +104,7 @@ func callPostProfileService(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTO
 func callGetProfileService(email string) (rest.ResponseDTOWithProfile, apihelper.ApiErrors, int) {
 
 	// call api
-	req, err := http.NewRequest("GET", baseUrl+"/profiles/"+email, nil)
+	req, err := http.NewRequest("GET", profileBaseUrl+"/"+email, nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

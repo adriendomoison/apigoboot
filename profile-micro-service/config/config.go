@@ -9,7 +9,7 @@ import (
 // GAppName define the app name
 var GAppName = "apigoboot"
 
-var devPort = "4201"
+var devPort = "4200"
 var devAppUrl = "http://api.go.boot"
 var prodAppUrl = "https://apigoboot.herokuapp.com"
 

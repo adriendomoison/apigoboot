@@ -11,40 +11,61 @@ services:
       - POSTGRES_PASSWORD=apigoboot
       - PGDATA=/pgdata
 
-  api_gateway:
+  api.gateway:
     build:
       context: ./api-gateway
+    depends_on:
+      - "db"
     volumes:
       - ./api-gateway:/go/src/github.com/adriendomoison/apigoboot/api-gateway/
     ports:
-      - "4000:4000"
+      - "4200:4200"
 
-  user_api:
+  api.user:
     build:
       context: ./user-micro-service
+    depends_on:
+      - "db"
     volumes:
       - ./user-micro-service:/go/src/github.com/adriendomoison/apigoboot/user-micro-service/
     ports:
-      - "4200:4200"
+      - "4201:4200"
     links:
       - db
+    networks:
+      default:
+        aliases:
+          - api.route
 
-  profile_api:
+  api.profile:
     build:
       context: ./profile-micro-service
+    depends_on:
+      - "db"
     volumes:
       - ./profile-micro-service:/go/src/github.com/adriendomoison/apigoboot/profile-micro-service/
     ports:
-      - "4201:4201"
+      - "4202:4200"
     links:
       - db
+    networks:
+      default:
+        aliases:
+          - api.route
 
-  oauth2_api:
+  api.oauth2:
     build:
       context: ./oauth2-micro-service
     volumes:
       - ./oauth2-micro-service:/go/src/github.com/adriendomoison/apigoboot/oauth2-micro-service/
     ports:
-      - "4202:4202"
+      - "4203:4200"
     links:
       - db
+    networks:
+      default:
+        aliases:
+          - api.route
+
+networks:
+  api.route:

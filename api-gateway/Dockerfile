@@ -6,4 +6,4 @@ WORKDIR /go/src/github.com/adriendomoison/apigoboot/api-gateway
 
 CMD go build ./serve-api-gateway.go && ./serve-api-gateway
 
-EXPOSE 4000
+EXPOSE 4200

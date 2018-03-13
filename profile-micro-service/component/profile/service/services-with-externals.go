@@ -7,13 +7,13 @@ import (
 	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
-	"github.com/adriendomoison/apigoboot/profile-micro-service/config"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
-var baseUrl = config.GAppUrl + "/api/private-v1"
+// TODO make it "http://api.user.apigoboot/api/private-v1/user"
+var userBaseUrl = "http://api.user:4200/api/private-v1/user"
 
 func askUserServiceForUserId(email string) (rest.ResponseDTOUserInfo, *servicehelper.Error) {
 	resDTO, apiErrors, statusCode := callGetUserIdService(email)
@@ -45,7 +45,7 @@ func askUserServiceForUserEmail(userId uint) (rest.ResponseDTOUserInfo, *service
 func callGetUserIdService(email string) (rest.ResponseDTOUserInfo, apihelper.ApiErrors, int) {
 
 	// call api
-	req, err := http.NewRequest("GET", baseUrl+"/user/email/"+email, nil)
+	req, err := http.NewRequest("GET", userBaseUrl+"/email/"+email, nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -69,7 +69,7 @@ func callGetUserIdService(email string) (rest.ResponseDTOUserInfo, apihelper.Api
 func callGetUserEmailService(userId uint) (rest.ResponseDTOUserInfo, apihelper.ApiErrors, int) {
 
 	// call api
-	req, err := http.NewRequest("GET", baseUrl+"/user/id/"+strconv.Itoa(int(userId)), nil)
+	req, err := http.NewRequest("GET", userBaseUrl+"/id/"+strconv.Itoa(int(userId)), nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

@@ -6,4 +6,4 @@ WORKDIR /go/src/github.com/adriendomoison/apigoboot/profile-micro-service
 
 CMD go build component/serve-micro-service.go && ./serve-micro-service
 
-EXPOSE 4201
+EXPOSE 4200

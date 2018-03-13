@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-var devPort = "4000"
+var devPort = "4200"
 var devAppUrl = "http://api.go.boot"
 var prodAppUrl = "https://apigoboot.herokuapp.com"
 
