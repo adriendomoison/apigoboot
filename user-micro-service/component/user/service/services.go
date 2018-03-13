@@ -7,7 +7,7 @@ import (
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
 	"github.com/elithrar/simple-scrypt"
 	"github.com/jinzhu/copier"
-	"github.com/jinzhu/gorm"
+	"time"
 )
 
 // RepoInterface is the model for the repo package of user
@@ -21,10 +21,12 @@ type RepoInterface interface {
 
 // Entity is the model of a user in the database
 type Entity struct {
-	gorm.Model
-	Email    string `gorm:"NOT NULL;UNIQUE"`
-	Username string
-	Password string `gorm:"NOT NULL"`
+	ID        uint `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Email     string `gorm:"NOT NULL;UNIQUE"`
+	Username  string
+	Password  string `gorm:"NOT NULL"`
 }
 
 // TableName allow to gives a specific name to the user table
