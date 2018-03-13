@@ -2,6 +2,7 @@ version: '3'
 services:
   db:
     build: api-db
+    container_name: apigoboot_db
     volumes:
       - ./api-db/pgdata:/pgdata
     ports:
@@ -11,19 +12,25 @@ services:
       - POSTGRES_PASSWORD=apigoboot
       - PGDATA=/pgdata
 
-  api.gateway:
+  api_gateway:
     build:
       context: ./api-gateway
+    container_name: apigoboot_api_gateway
     depends_on:
       - "db"
     volumes:
       - ./api-gateway:/go/src/github.com/adriendomoison/apigoboot/api-gateway/
     ports:
       - "4200:4200"
+    networks:
+      default:
+        aliases:
+          - gateway.api
 
-  api.user:
+  api_user:
     build:
       context: ./user-micro-service
+    container_name: apigoboot_api_user
     depends_on:
       - "db"
     volumes:
@@ -35,11 +42,12 @@ services:
     networks:
       default:
         aliases:
-          - api.route
+          - user.api
 
-  api.profile:
+  api_profile:
     build:
       context: ./profile-micro-service
+    container_name: apigoboot_api_profile
     depends_on:
       - "db"
     volumes:
@@ -51,11 +59,12 @@ services:
     networks:
       default:
         aliases:
-          - api.route
+          - profile.api
 
-  api.oauth2:
+  api_oauth2:
     build:
       context: ./oauth2-micro-service
+    container_name: apigoboot_api_oauth2
     volumes:
       - ./oauth2-micro-service:/go/src/github.com/adriendomoison/apigoboot/oauth2-micro-service/
     ports:
@@ -65,7 +74,8 @@ services:
     networks:
       default:
         aliases:
-          - api.route
-
+          - oauth2.api
 networks:
-  api.route:
+  default:
+    external:
+      name: apigoboot_network
