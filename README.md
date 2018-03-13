@@ -17,7 +17,8 @@ This is a playground for a boilerplate API in Go using a micro service oriented 
 #### Start
 
 ```
-docker-compose up
+$ docker network create apigoboot_network
+$ docker-compose up
 ```
 
 ### Return values
