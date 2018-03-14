@@ -1,3 +1,8 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'Please provide a micro service name'
+    exit 0
+fi
+
 DOCKERFILE="FROM golang:1.10
 
 MAINTAINER Adrien Domoison \"adomoison@gmail.com\"
@@ -511,3 +516,5 @@ echo "$SERVICE" >> service/service.go
 echo "$REPO" >> repo/repo.go
 cd ../..
 git add .
+cd ..
+echo "$1-micro-service has been created"
