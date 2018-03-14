@@ -13,7 +13,7 @@ import (
 )
 
 // TODO make it "http://api.profile.apigoboot/api/private-v1/profiles"
-var profileBaseUrl = "http://api.profile:4200/api/private-v1/profiles"
+var profileBaseUrl = "http://profile.api:4200/api/private-v1/profiles"
 
 // AddWithProfile set up and create a user with a profile
 func (s *service) AddWithProfile(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTOWithProfile, *servicehelper.Error) {

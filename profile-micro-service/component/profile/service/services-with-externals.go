@@ -13,7 +13,7 @@ import (
 )
 
 // TODO make it "http://api.user.apigoboot/api/private-v1/user"
-var userBaseUrl = "http://api.user:4200/api/private-v1/user"
+var userBaseUrl = "http://user.api:4200/api/private-v1/user"
 
 func askUserServiceForUserId(email string) (rest.ResponseDTOUserInfo, *servicehelper.Error) {
 	resDTO, apiErrors, statusCode := callGetUserIdService(email)
