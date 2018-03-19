@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 if [[ $# -eq 0 ]] ; then
     echo 'Please provide a micro service name'
     exit 0
@@ -498,6 +499,61 @@ func connectToDB(username string, dbName string, password string, host string) (
 	}
 	return
 }"
+##
+
+TESTAPIS="package main_test
+
+import (
+	\"github.com/adriendomoison/apigoboot/$1-micro-service/component/$1\"
+	\"github.com/adriendomoison/apigoboot/$1-micro-service/component/$1/repo\"
+	\"github.com/adriendomoison/apigoboot/$1-micro-service/component/$1/rest\"
+	\"github.com/adriendomoison/apigoboot/$1-micro-service/component/$1/service\"
+	\"github.com/adriendomoison/apigoboot/$1-micro-service/config\"
+	\"github.com/adriendomoison/apigoboot/$1-micro-service/database/dbconn\"
+	\"github.com/gin-contrib/cors\"
+	\"github.com/gin-gonic/gin\"
+	\"os\"
+	\"testing\"
+	\"github.com/adriendomoison/apigoboot/api-tool/apitool\"
+)
+
+var publicBaseUrl = config.GAppUrl + \"/api/v1\"
+var privateBaseUrl = config.GAppUrl + \"/api/private-v1\"
+
+func TestMain(m *testing.M) {
+	// Init Env
+	config.SetToTestingEnv()
+
+	// Init DB
+	dbconn.Connect()
+	defer dbconn.DB.Close()
+
+	// Init router
+	router := gin.Default()
+	router.Use(cors.New(apitool.DefaultCORSConfig()))
+
+	// Append routes to server
+	$1Component := $1.New(rest.New(service.New(repo.New())))
+	$1Component.AttachPublicAPI(router.Group(publicBaseUrl))
+	$1Component.AttachPrivateAPI(router.Group(privateBaseUrl))
+
+	// Add mocked other micro-services called by this service
+
+	// Start service
+	go router.Run(\":\" + config.GPort)
+
+	// Wait and check if the http server is running
+	apitool.WaitForServerToStart(publicBaseUrl + \"/\")
+
+	// Start tests
+	code := m.Run()
+
+	// Drop test tables
+	dbconn.DB.DropTable(&service.Entity{})
+
+	// Stop tests
+	os.Exit(code)
+}"
 
 mkdir $1-micro-service
 cd $1-micro-service
@@ -507,6 +563,7 @@ echo "$CONFIG" >> config/config.go
 echo "$DBCONN" >> database/dbconn/dbconn.go
 cd component
 echo "$SERVEMSFILE" >> serve-micro-service.go
+echo "$TESTAPIS" >> $1-micro-service_test.go
 mkdir $1
 cd $1
 echo "$FILE" >> $1.go
@@ -515,6 +572,8 @@ echo "$REST" >> rest/rest.go
 echo "$SERVICE" >> service/service.go
 echo "$REPO" >> repo/repo.go
 cd ../..
+govendor init
+govendor add +external
 git add .
 cd ..
 echo "$1-micro-service has been created"
