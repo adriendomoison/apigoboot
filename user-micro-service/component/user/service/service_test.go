@@ -1,7 +1,7 @@
 package service_test
 
 import (
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/service"
 	"github.com/adriendomoison/apigoboot/user-micro-service/config"

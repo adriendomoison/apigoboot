@@ -3,7 +3,7 @@ package service
 
 import (
 	"errors"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
 )
 

@@ -2,7 +2,10 @@
 package gentool
 
 import (
+	"log"
 	"math/rand"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -15,4 +18,13 @@ func GenerateRandomString(strLen int) string {
 		result[i] = chars[rand.Intn(len(chars))]
 	}
 	return string(result)
+}
+
+func GenerateCleanString(s string) string {
+	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
+	if err != nil {
+		log.Println(err)
+	}
+	alphanumericalString := reg.ReplaceAllString(s, " ")
+	return strings.Join(strings.Fields(alphanumericalString), " ")
 }

@@ -2,8 +2,8 @@
 package rest
 
 import (
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
 	"github.com/gin-gonic/gin"
 	"net/http"

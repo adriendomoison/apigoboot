@@ -2,6 +2,7 @@
 package main
 
 import (
+	"github.com/adriendomoison/apigoboot/api-tool/apitool"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/repo"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
@@ -26,7 +27,7 @@ func main() {
 
 	// Init router
 	router := gin.Default()
-	router.Use(cors.New(getCORSConfig()))
+	router.Use(cors.New(apitool.DefaultCORSConfig()))
 
 	// Profile component
 	profileComponent := profile.New(rest.New(service.New(repo.New())))
@@ -36,14 +37,4 @@ func main() {
 	// Start router
 	go log.Println("Service profile started: Navigate to " + config.GAppUrl)
 	router.Run(":" + config.GPort)
-}
-
-// getCORSConfig Generate CORS config for router
-func getCORSConfig() cors.Config {
-	CORSConfig := cors.DefaultConfig()
-	CORSConfig.AllowCredentials = true
-	CORSConfig.AllowAllOrigins = true
-	CORSConfig.AllowHeaders = []string{"*"}
-	CORSConfig.AllowMethods = []string{"GET", "PUT", "POST", "DELETE", "OPTIONS"}
-	return CORSConfig
 }

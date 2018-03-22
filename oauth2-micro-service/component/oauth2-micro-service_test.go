@@ -1,10 +1,11 @@
 package main_test
 
 import (
-	"bytes"
 	"encoding/json"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/apitool"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/repo"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
@@ -13,28 +14,18 @@ import (
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/database/dbconn"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-errors/errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"testing"
-	"time"
 )
 
-var PublicBaseUrl = config.GAppUrl + "/authentication"
-var PrivateBaseUrl = config.GAppUrl + "/api/private-v1/authentication"
-var AccessToken = ""
-
-// getCORSConfig Generate CORS config for router
-func getCORSConfig() cors.Config {
-	CORSConfig := cors.DefaultConfig()
-	CORSConfig.AllowCredentials = true
-	CORSConfig.AllowAllOrigins = true
-	CORSConfig.AllowHeaders = []string{"*"}
-	CORSConfig.AllowMethods = []string{"GET", "PUT", "POST", "DELETE", "OPTIONS"}
-	return CORSConfig
-}
+var publicBaseUrl = config.GAppUrl + "/authentication"
+var privateBaseUrl = config.GAppUrl + "/api/private-v1/authentication"
+var accessToken = ""
 
 // initOAuthServer Init OSIN OAuth server
 func initOAuthServer() *osin.Server {
@@ -49,10 +40,10 @@ func initOAuthServer() *osin.Server {
 
 func requestCode(t *testing.T) string {
 	form := url.Values{}
-	form.Add("username", "adrien@example.dev")
+	form.Add("username", "test00@example.dev")
 	form.Add("password", "password123")
 
-	req, err := http.NewRequest("POST", PublicBaseUrl+"/authorize?response_type=code&client_id=apigoboot&client_secret=apigoboot&state=xyz&scope=everything&redirect_uri=http://api.go.boot:4202/authentication/oauth2/code", strings.NewReader(form.Encode()))
+	req, err := http.NewRequest("POST", publicBaseUrl+"/authorize?response_type=code&client_id=apigoboot&client_secret=apigoboot&state=xyz&scope=everything&redirect_uri=http://api.go.boot:4200/authentication/oauth2/code", strings.NewReader(form.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{}
@@ -85,10 +76,17 @@ func CheckCredentialsMock(c *gin.Context) {
 	if err := c.BindJSON(&reqDTO); err != nil {
 		c.JSON(apihelper.BuildRequestError(err))
 	} else {
-		c.JSON(http.StatusOK, rest.ResponseDTOUserInfo{
-			UserId: 1,
-			Email:  "test00@example.dev",
-		})
+		if reqDTO.Username == "test00@example.dev" && reqDTO.Password == "password123" {
+			c.JSON(http.StatusOK, rest.ResponseDTOUserInfo{
+				UserId: 1,
+				Email:  "test00@example.dev",
+			})
+		} else {
+			c.JSON(apihelper.BuildResponseError(&servicehelper.Error{
+				Detail: errors.New("bad username or password"),
+				Code:   servicehelper.BadRequest,
+			}))
+		}
 	}
 	return
 }
@@ -103,7 +101,7 @@ func TestMain(m *testing.M) {
 
 	// Init router
 	router := gin.Default()
-	router.Use(cors.New(getCORSConfig()))
+	router.Use(cors.New(apitool.DefaultCORSConfig()))
 
 	// Append routes to server
 	oauth2Component := oauth2.New(rest.New(initOAuthServer(), service.New(repo.New())))
@@ -120,14 +118,7 @@ func TestMain(m *testing.M) {
 	createClient()
 
 	// Wait and check if the http server is running
-	for i := 0; i < 5; i++ {
-		req, _ := http.NewRequest("GET", PublicBaseUrl+"/", nil)
-		client := &http.Client{}
-		if _, err := client.Do(req); err == nil {
-			break
-		}
-		time.Sleep(1000)
-	}
+	apitool.WaitForServerToStart(publicBaseUrl + "/")
 
 	// Start tests
 	code := m.Run()
@@ -146,7 +137,7 @@ func createClient() {
 	dbconn.DB.Create(&service.Client{
 		Id:          "apigoboot",
 		Secret:      "apigoboot",
-		RedirectUri: "http://api.go.boot:4202/authentication/oauth2/code",
+		RedirectUri: "http://api.go.boot:4200/authentication/oauth2/code",
 		UserId:      1,
 	})
 }
@@ -154,7 +145,7 @@ func createClient() {
 func TestPasswordAuthentication(t *testing.T) {
 
 	// init test variable
-	values := map[string]string{
+	requestBody := map[string]string{
 		"client_id":     "apigoboot",
 		"client_secret": "apigoboot",
 		"method":        "password",
@@ -162,32 +153,16 @@ func TestPasswordAuthentication(t *testing.T) {
 		"password":      "password123",
 	}
 
-	jsonValue, err := json.Marshal(values)
-	if err != nil {
-		panic(err)
-	}
-
 	// call api
-	req, err := http.NewRequest("POST", PublicBaseUrl+"/oauth2/password", bytes.NewBuffer(jsonValue))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
 	access := struct {
 		AccessToken string `json:"access_token"`
 	}{}
-	apiErrors := apihelper.ApiErrors{}
-	if json.Unmarshal(body, &access) != nil {
-		json.Unmarshal(body, &apiErrors)
-	}
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:      "POST",
+		URL:         publicBaseUrl + "/oauth2/password",
+		ContentType: "application/x-www-form-urlencoded",
+	}, requestBody, &access)
+	defer resp.Body.Close()
 
 	// test response
 	if resp.Status != "200 OK" {
@@ -196,7 +171,7 @@ func TestPasswordAuthentication(t *testing.T) {
 		t.Error("Access token is empty")
 	}
 
-	AccessToken = access.AccessToken
+	accessToken = access.AccessToken
 }
 
 func TestCodeAuthentication(t *testing.T) {
@@ -205,26 +180,15 @@ func TestCodeAuthentication(t *testing.T) {
 	code := requestCode(t)
 
 	// call api
-	req, err := http.NewRequest("GET", PublicBaseUrl+"/oauth2/code?code="+code+"&state=xyz&client_id=apigoboot&client_secret=apigoboot&parse=yes", nil)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
 	access := struct {
 		AccessToken string `json:"access_token"`
 	}{}
-	apiErrors := apihelper.ApiErrors{}
-	if json.Unmarshal(body, &access) != nil {
-		json.Unmarshal(body, &apiErrors)
-	}
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:      "GET",
+		URL:         publicBaseUrl + "/oauth2/code?code=" + code + "&state=xyz&client_id=apigoboot&client_secret=apigoboot&parse=yes",
+		ContentType: "application/x-www-form-urlencoded",
+	}, nil, &access)
+	defer resp.Body.Close()
 
 	// test response
 	if resp.Status != "200 OK" {
@@ -241,29 +205,16 @@ func TestGetAccessTokenOwnerUserId(t *testing.T) {
 
 	// print test variable for easy debug
 	t.Log("testing with following parameters:")
-	t.Log(AccessToken)
+	t.Log(accessToken)
 
 	// call api
-	req, err := http.NewRequest("GET", PrivateBaseUrl+"/access-token/"+AccessToken+"/get-owner", nil)
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var user rest.ResponseDTOUserInfo
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "GET",
+		URL:           privateBaseUrl + "/access-token/" + accessToken + "/get-owner",
+		Authorization: "Bearer " + accessToken,
+	}, nil, &user)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	user := rest.ResponseDTOUserInfo{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &user)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(user)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {

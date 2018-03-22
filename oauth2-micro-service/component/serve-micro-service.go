@@ -3,6 +3,7 @@ package main
 
 import (
 	"github.com/RangelReale/osin"
+	"github.com/adriendomoison/apigoboot/api-tool/apitool"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/repo"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
@@ -27,7 +28,7 @@ func main() {
 
 	// Init router
 	router := gin.Default()
-	router.Use(cors.New(getCORSConfig()))
+	router.Use(cors.New(apitool.DefaultCORSConfig()))
 
 	// Init statics
 	if !config.GUnitTestingEnv {
@@ -43,16 +44,6 @@ func main() {
 	// Start router
 	go log.Println("Service oauth2 started: Navigate to " + config.GAppUrl)
 	router.Run(":" + config.GPort)
-}
-
-// getCORSConfig Generate CORS config for router
-func getCORSConfig() cors.Config {
-	CORSConfig := cors.DefaultConfig()
-	CORSConfig.AllowCredentials = true
-	CORSConfig.AllowAllOrigins = true
-	CORSConfig.AllowHeaders = []string{"*"}
-	CORSConfig.AllowMethods = []string{"GET", "PUT", "POST", "DELETE", "OPTIONS"}
-	return CORSConfig
 }
 
 // initOAuthServer Init OSIN OAuth server

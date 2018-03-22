@@ -4,8 +4,8 @@ package rest
 import (
 	"fmt"
 	"github.com/RangelReale/osin"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
 	"github.com/gin-gonic/gin"
 	"github.com/go-errors/errors"

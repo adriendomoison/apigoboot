@@ -4,8 +4,8 @@ package service
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/component/oauth2/rest"
 	"github.com/adriendomoison/apigoboot/oauth2-micro-service/config"
 	"github.com/go-errors/errors"

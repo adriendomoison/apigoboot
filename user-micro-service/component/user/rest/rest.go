@@ -2,8 +2,8 @@
 package rest
 
 import (
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -86,9 +86,10 @@ func New(service ServiceInterface) *rest {
 }
 
 // Post allows to access the service to create a user
+// add create_profile=true query parameter to create the profile alongside the user
 func (r *rest) Post(c *gin.Context) {
 	var createProfile bool
-	if !apihelper.GetBoolQueryParam(c, &createProfile, "createprofile", false) {
+	if !apihelper.GetBoolQueryParam(c, &createProfile, "create_profile", false) {
 		return
 	}
 
@@ -118,10 +119,11 @@ func (r *rest) Post(c *gin.Context) {
 }
 
 // Get allows to access the service to retrieve a user when sending its email
+// add get_profile=true query parameter to get the profile alongside the user
 func (r *rest) Get(c *gin.Context) {
 
 	var getProfile bool
-	if !apihelper.GetBoolQueryParam(c, &getProfile, "getprofile", false) {
+	if !apihelper.GetBoolQueryParam(c, &getProfile, "get_profile", false) {
 		return
 	}
 

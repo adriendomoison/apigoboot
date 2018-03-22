@@ -3,7 +3,7 @@ package rest
 
 import (
 	"encoding/json"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/config"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"

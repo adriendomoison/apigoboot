@@ -3,8 +3,8 @@ package service
 
 import (
 	"errors"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/api-tool/gentool"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
 	"github.com/jinzhu/copier"
 	"github.com/jinzhu/gorm"

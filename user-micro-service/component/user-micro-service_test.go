@@ -1,9 +1,7 @@
 package main_test
 
 import (
-	"bytes"
-	"encoding/json"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/apitool"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/repo"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
@@ -12,27 +10,14 @@ import (
 	"github.com/adriendomoison/apigoboot/user-micro-service/database/dbconn"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"testing"
-	"time"
 )
 
-var PublicBaseUrl = config.GAppUrl + "/api/v1"
-var PrivateBaseUrl = config.GAppUrl + "/api/private-v1"
-
-// Generate CORS config for router
-func getCORSConfig() cors.Config {
-	CORSConfig := cors.DefaultConfig()
-	CORSConfig.AllowCredentials = true
-	CORSConfig.AllowAllOrigins = true
-	CORSConfig.AllowHeaders = []string{"*"}
-	CORSConfig.AllowMethods = []string{"GET", "PUT", "POST", "DELETE", "OPTIONS"}
-	return CORSConfig
-}
+var publicBaseUrl = config.GAppUrl + "/api/v1"
+var privateBaseUrl = config.GAppUrl + "/api/private-v1"
 
 func getAccessTokenOwnerUserIdMock(c *gin.Context) {
 	accessToken := c.Param("accessToken")
@@ -62,7 +47,7 @@ func getUserProfileMock(c *gin.Context) {
 }
 
 func postUserProfileMock(c *gin.Context) {
-	c.JSON(http.StatusOK, struct {
+	c.JSON(http.StatusCreated, struct {
 		PublicId  string `json:"profile_id"`
 		FirstName string `json:"first_name"`
 		LastName  string `json:"last_name"`
@@ -77,15 +62,6 @@ func postUserProfileMock(c *gin.Context) {
 	})
 }
 
-func encodeRequestBody(t *testing.T, reqBody interface{}) io.Reader {
-	t.Log("testing with following parameters:")
-	t.Log(reqBody)
-
-	b := new(bytes.Buffer)
-	json.NewEncoder(b).Encode(reqBody)
-	return b
-}
-
 func TestMain(m *testing.M) {
 	// Init Env
 	config.SetToTestingEnv()
@@ -96,7 +72,7 @@ func TestMain(m *testing.M) {
 
 	// Init router
 	router := gin.Default()
-	router.Use(cors.New(getCORSConfig()))
+	router.Use(cors.New(apitool.DefaultCORSConfig()))
 
 	// Append routes to server
 	userComponent := user.New(rest.New(service.New(repo.New())))
@@ -112,14 +88,7 @@ func TestMain(m *testing.M) {
 	go router.Run(":" + config.GPort)
 
 	// Wait and check if the http server is running
-	for i := 0; i < 5; i++ {
-		req, _ := http.NewRequest("GET", PublicBaseUrl+"/", nil)
-		client := &http.Client{}
-		if _, err := client.Do(req); err == nil {
-			break
-		}
-		time.Sleep(1000)
-	}
+	apitool.WaitForServerToStart(publicBaseUrl + "/")
 
 	// Start tests
 	code := m.Run()
@@ -144,32 +113,19 @@ func TestPost(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("POST", PublicBaseUrl+"/users", encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
 	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:      "POST",
+		URL:         publicBaseUrl + "/users/",
+		ContentType: "application/x-www-form-urlencoded",
+	}, requestBody, &userDTO)
+	defer resp.Body.Close()
 
 	// test response
 	if resp.StatusCode != 201 {
-		t.Errorf("Expected %s to be %s, got %s", "status", "201", resp.Status)
+		t.Errorf("Expected %v to be %v, got %v", "status", "201", resp.Status)
 	} else if userDTO.Email != email {
-		t.Errorf("Expected %s to be %s, got %s", "email", email, userDTO.Email)
+		t.Errorf("Expected %v to be %v, got %v", "email", email, userDTO.Email)
 	}
 
 }
@@ -184,26 +140,13 @@ func TestGet(t *testing.T) {
 	t.Log(email)
 
 	// call api
-	req, err := http.NewRequest("GET", PublicBaseUrl+"/users/"+email, nil)
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
 	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "GET",
+		URL:           publicBaseUrl + "/users/" + email,
+		Authorization: "Bearer XXX",
+	}, nil, &userDTO)
+	defer resp.Body.Close()
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -228,34 +171,21 @@ func TestPutEmailWithEmailThatIsNotAnEmail(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("PUT", PublicBaseUrl+"/users/"+email+"/email", encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
 	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
+	resp, apiError := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "PUT",
+		URL:           publicBaseUrl + "/users/" + email + "/email",
+		ContentType:   "application/x-www-form-urlencoded",
+		Authorization: "Bearer XXX",
+	}, requestBody, &userDTO)
+	defer resp.Body.Close()
 
 	// test response
 	if resp.StatusCode != 400 {
 		t.Errorf("Expected %s to be %s, got %s", "status", "400", resp.Status)
 	} else if userDTO.Email == newEmail {
 		t.Errorf("Expected %s to be %s, got %s", "email", userDTO.Email, newEmail)
-	} else if apiErrors.Errors == nil {
+	} else if apiError.Errors == nil {
 		t.Errorf("Expected %s to be %s, got %s", "an error", "returned", "nothing")
 	}
 }
@@ -275,33 +205,24 @@ func TestPutEmail(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("PUT", PublicBaseUrl+"/users/"+email+"/email", encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
 	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
+	resp, apiError := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "PUT",
+		URL:           publicBaseUrl + "/users/" + email + "/email",
+		ContentType:   "application/x-www-form-urlencoded",
+		Authorization: "Bearer XXX",
+	}, requestBody, &userDTO)
+	defer resp.Body.Close()
 
 	// test response
 	if resp.StatusCode != 200 {
 		t.Errorf("Expected %s to be %s, got %s", "status", "200", resp.Status)
-	} else if userDTO.Email != newEmail {
+	}
+	if userDTO.Email != newEmail {
 		t.Errorf("Expected %s to be %s, got %s", "email", newEmail, userDTO.Email)
+	}
+	if len(apiError.Errors) == 1 {
+		t.Errorf("Expected %v to be %v, got %v", "len(apiError.Errors)", 0, 1)
 	}
 }
 
@@ -320,31 +241,20 @@ func TestPutPasswordWithoutKnowingPassword(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("PUT", PublicBaseUrl+"/users/"+email+"/password", encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	resp, apiError := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "PUT",
+		URL:           publicBaseUrl + "/users/" + email + "/password",
+		ContentType:   "application/x-www-form-urlencoded",
+		Authorization: "Bearer XXX",
+	}, requestBody, &rest.ResponseDTO{})
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userDTP := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTP)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTP)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 400 {
-		t.Errorf("Expected %s to be %s, got %s", "status", "400", resp.Status)
+		t.Errorf("Expected %v to be %v, got %v", "status", "400", resp.Status)
+	}
+	if len(apiError.Errors) == 0 {
+		t.Errorf("Expected %v to be %v, got %v", "len(apiError.Errors)", 1, 0)
 	}
 }
 
@@ -363,27 +273,13 @@ func TestPutPassword(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("PUT", PublicBaseUrl+"/users/"+email+"/password", encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "PUT",
+		URL:           publicBaseUrl + "/users/" + email + "/password",
+		ContentType:   "application/x-www-form-urlencoded",
+		Authorization: "Bearer XXX",
+	}, requestBody, &rest.ResponseDTO{})
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -391,7 +287,7 @@ func TestPutPassword(t *testing.T) {
 	}
 }
 
-func TestDeleteWithWringAccessToken(t *testing.T) {
+func TestDeleteWithWrongAccessToken(t *testing.T) {
 
 	// init test variable
 	email := "test01@example.dev"
@@ -401,27 +297,12 @@ func TestDeleteWithWringAccessToken(t *testing.T) {
 	t.Log(email)
 
 	// call api
-	req, err := http.NewRequest("DELETE", PublicBaseUrl+"/users/"+email, nil)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Bearer YYY")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "DELETE",
+		URL:           publicBaseUrl + "/users/" + email,
+		Authorization: "Bearer YYY",
+	}, nil, &rest.ResponseDTO{})
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 403 {
@@ -439,27 +320,12 @@ func TestDelete(t *testing.T) {
 	t.Log(email)
 
 	// call api
-	req, err := http.NewRequest("DELETE", PublicBaseUrl+"/users/"+email, nil)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "DELETE",
+		URL:           publicBaseUrl + "/users/" + email,
+		Authorization: "Bearer XXX",
+	}, nil, &rest.ResponseDTO{})
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -486,26 +352,13 @@ func TestPostWithProfileCreation(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("POST", PublicBaseUrl+"/users?createprofile=true", encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var userDTO rest.ResponseDTO
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:      "POST",
+		URL:         publicBaseUrl + "/users?create_profile=true",
+		ContentType: "application/x-www-form-urlencoded",
+	}, requestBody, &userDTO)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 201 {
@@ -527,26 +380,13 @@ func TestProfileWasCreated(t *testing.T) {
 	t.Log(email)
 
 	// call api
-	req, err := http.NewRequest("GET", PublicBaseUrl+"/users/"+email+"?getprofile=true", nil)
-	req.Header.Set("Authorization", "Bearer YYY")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var userWithProfile rest.ResponseDTOWithProfile
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "GET",
+		URL:           publicBaseUrl + "/users/" + email + "?get_profile=true",
+		Authorization: "Bearer YYY",
+	}, nil, &userWithProfile)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userWithProfile := rest.ResponseDTOWithProfile{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userWithProfile)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userWithProfile)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -565,35 +405,22 @@ func TestCheckCredentials(t *testing.T) {
 	// init test variable
 	email := "test00@example.dev"
 	password := "mySecretPassword#123"
-	method := "password"
+	authType := "password"
 
 	// build JSON request body
 	requestBody := rest.RequestDTOCheckCredentials{
 		Username: email,
 		Password: password,
-		AuthType: method,
+		AuthType: authType,
 	}
 
 	// call api
-	req, err := http.NewRequest("POST", PrivateBaseUrl+"/user/check-credentials", encodeRequestBody(t, requestBody))
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var userInfo rest.ResponseDTOUserInfo
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method: "POST",
+		URL:    privateBaseUrl + "/user/check-credentials",
+	}, requestBody, &userInfo)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userInfo := rest.ResponseDTOUserInfo{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userInfo)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userInfo)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -613,25 +440,12 @@ func TestGetByEmail(t *testing.T) {
 	t.Log(email)
 
 	// call api
-	req, err := http.NewRequest("GET", PrivateBaseUrl+"/user/email/"+email, nil)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var userInfo rest.ResponseDTOUserInfo
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method: "GET",
+		URL:    privateBaseUrl + "/user/email/" + email,
+	}, nil, &userInfo)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userInfo := rest.ResponseDTOUserInfo{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userInfo)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userInfo)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -651,25 +465,12 @@ func TestGetByUserId(t *testing.T) {
 	t.Log(email)
 
 	// call api
-	req, err := http.NewRequest("GET", PrivateBaseUrl+"/user/id/"+strconv.Itoa(userId), nil)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var userInfo rest.ResponseDTOUserInfo
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method: "GET",
+		URL:    privateBaseUrl + "/user/id/" + strconv.Itoa(userId),
+	}, nil, &userInfo)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	userInfo := rest.ResponseDTOUserInfo{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &userInfo)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(userInfo)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {

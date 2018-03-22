@@ -2,7 +2,7 @@
 package rest
 
 import (
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"

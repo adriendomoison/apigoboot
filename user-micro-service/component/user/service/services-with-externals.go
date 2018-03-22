@@ -5,15 +5,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/user-micro-service/component/user/rest"
 	"io/ioutil"
 	"net/http"
 )
 
-// TODO make it "http://api.profile.apigoboot/api/private-v1/profiles"
-var profileBaseUrl = "http://profile.api:4200/api/private-v1/profiles"
+var profileBaseUrl = "http://api.profile.apigoboot:4200/api/private-v1/profiles"
 
 // AddWithProfile set up and create a user with a profile
 func (s *service) AddWithProfile(reqDTO rest.RequestDTOWithProfile) (rest.ResponseDTOWithProfile, *servicehelper.Error) {

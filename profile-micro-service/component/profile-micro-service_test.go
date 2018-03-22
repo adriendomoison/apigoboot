@@ -1,9 +1,7 @@
 package main_test
 
 import (
-	"bytes"
-	"encoding/json"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/apitool"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/repo"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
@@ -12,28 +10,15 @@ import (
 	"github.com/adriendomoison/apigoboot/profile-micro-service/database/dbconn"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"testing"
-	"time"
 )
 
-var PublicBaseUrl = config.GAppUrl + "/api/v1"
-var PrivateBaseUrl = config.GAppUrl + "/api/private-v1"
-var ProfilePublicId = ""
-
-// Generate CORS config for router
-func getCORSConfig() cors.Config {
-	CORSConfig := cors.DefaultConfig()
-	CORSConfig.AllowCredentials = true
-	CORSConfig.AllowAllOrigins = true
-	CORSConfig.AllowHeaders = []string{"*"}
-	CORSConfig.AllowMethods = []string{"GET", "PUT", "POST", "DELETE", "OPTIONS"}
-	return CORSConfig
-}
+var publicBaseUrl = config.GAppUrl + "/api/v1"
+var privateBaseUrl = config.GAppUrl + "/api/private-v1"
+var profilePublicId = ""
 
 func getAccessTokenOwnerUserIdMock(c *gin.Context) {
 	accessToken := c.Param("accessToken")
@@ -68,15 +53,6 @@ func getUserByEmail(c *gin.Context) {
 	}
 }
 
-func encodeRequestBody(t *testing.T, reqBody interface{}) io.Reader {
-	t.Log("testing with following parameters:")
-	t.Log(reqBody)
-
-	b := new(bytes.Buffer)
-	json.NewEncoder(b).Encode(reqBody)
-	return b
-}
-
 func TestMain(m *testing.M) {
 	// Init Env
 	config.SetToTestingEnv()
@@ -87,7 +63,7 @@ func TestMain(m *testing.M) {
 
 	// Init router
 	router := gin.Default()
-	router.Use(cors.New(getCORSConfig()))
+	router.Use(cors.New(apitool.DefaultCORSConfig()))
 
 	// Append routes to server
 	profileComponent := profile.New(rest.New(service.New(repo.New())))
@@ -103,14 +79,7 @@ func TestMain(m *testing.M) {
 	go router.Run(":" + config.GPort)
 
 	// Wait and check if the http server is running
-	for i := 0; i < 5; i++ {
-		req, _ := http.NewRequest("GET", PublicBaseUrl+"/", nil)
-		client := &http.Client{}
-		if _, err := client.Do(req); err == nil {
-			break
-		}
-		time.Sleep(1000)
-	}
+	apitool.WaitForServerToStart(publicBaseUrl + "/")
 
 	// Start tests
 	code := m.Run()
@@ -139,27 +108,14 @@ func TestPost(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("POST", PrivateBaseUrl+"/profiles", encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var profileDTO rest.ResponseDTO
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "POST",
+		URL:           privateBaseUrl + "/profiles",
+		ContentType:   "application/json",
+		Authorization: "Bearer XXX",
+	}, requestBody, &profileDTO)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	profileDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &profileDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(profileDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 201 {
@@ -175,13 +131,13 @@ func TestPost(t *testing.T) {
 	} else if profileDTO.PublicId == "" {
 		t.Errorf("Expected %s to be %s, got %s", "profile public id", "generated", "nothing")
 	}
-	ProfilePublicId = profileDTO.PublicId
+	profilePublicId = profileDTO.PublicId
 }
 
 func TestGet(t *testing.T) {
 
 	// init test variable
-	publicId := ProfilePublicId
+	publicId := profilePublicId
 	birthday := "1980-10-20"
 	email := "test00@example.dev"
 
@@ -190,26 +146,13 @@ func TestGet(t *testing.T) {
 	t.Log(publicId)
 
 	// call api
-	req, err := http.NewRequest("GET", PublicBaseUrl+"/profiles/"+publicId, nil)
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var profileDTO rest.ResponseDTO
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "GET",
+		URL:           publicBaseUrl + "/profiles/" + publicId,
+		Authorization: "Bearer XXX",
+	}, nil, &profileDTO)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	profileDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &profileDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(profileDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -224,7 +167,7 @@ func TestGet(t *testing.T) {
 func TestPut(t *testing.T) {
 
 	// init test variable
-	publicId := ProfilePublicId
+	publicId := profilePublicId
 	email := "test00@example.dev"
 	firstName := "Johnny"
 	lastName := "Blop"
@@ -241,27 +184,14 @@ func TestPut(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("PUT", PublicBaseUrl+"/profiles/"+publicId, encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var profileDTO rest.ResponseDTO
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "PUT",
+		URL:           publicBaseUrl + "/profiles/" + publicId,
+		ContentType:   "application/json",
+		Authorization: "Bearer XXX",
+	}, requestBody, &profileDTO)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	profileDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &profileDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(profileDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {
@@ -278,7 +208,7 @@ func TestPut(t *testing.T) {
 func TestPutMissingParam(t *testing.T) {
 
 	// init test variable
-	publicId := ProfilePublicId
+	publicId := profilePublicId
 
 	// build JSON request body
 	requestBody := rest.RequestDTO{
@@ -286,69 +216,43 @@ func TestPutMissingParam(t *testing.T) {
 	}
 
 	// call api
-	req, err := http.NewRequest("PUT", PublicBaseUrl+"/profiles/"+publicId, encodeRequestBody(t, requestBody))
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var profileDTO rest.ResponseDTO
+	resp, apiError := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "PUT",
+		URL:           publicBaseUrl + "/profiles/" + publicId,
+		ContentType:   "application/json",
+		Authorization: "Bearer XXX",
+	}, requestBody, &profileDTO)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	profileDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &profileDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(profileDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 400 {
 		t.Errorf("Expected %s to be %s, got %s", "status", "400", resp.Status)
-	} else if len(apiErrors.Errors) == 0 {
-		t.Errorf("Expected %s to be %s, got %s", "apiErrors.Errors", "containing errors", "no errors")
-	} else if len(apiErrors.Errors) != 4 {
-		t.Errorf("Expected %s to be %s, got %s", "apiErrors.Errors", "containing 4 errors", strconv.Itoa(len(apiErrors.Errors))+" errors")
+	} else if len(apiError.Errors) == 0 {
+		t.Errorf("Expected %s to be %s, got %s", "apiError.Errors", "containing errors", "no errors")
+	} else if len(apiError.Errors) != 4 {
+		t.Errorf("Expected %s to be %s, got %s", "apiError.Errors", "containing 4 errors", strconv.Itoa(len(apiError.Errors))+" errors")
 	}
 }
 
 func TestDelete(t *testing.T) {
 
 	// init test variable
-	publicId := ProfilePublicId
+	publicId := profilePublicId
 
 	// print test variable for easy debug
 	t.Log("testing with following parameters:")
 	t.Log(publicId)
 
 	// call api
-	req, err := http.NewRequest("DELETE", PrivateBaseUrl+"/profiles/"+publicId, nil)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer XXX")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	var profileDTO rest.ResponseDTO
+	resp, _ := apitool.HttpRequestHandlerForUnitTesting(t, apitool.RequestHeader{
+		Method:        "DELETE",
+		URL:           privateBaseUrl + "/profiles/" + publicId,
+		ContentType:   "application/json",
+		Authorization: "Bearer XXX",
+	}, nil, &profileDTO)
 	defer resp.Body.Close()
-
-	// read response
-	body, _ := ioutil.ReadAll(resp.Body)
-
-	profileDTO := rest.ResponseDTO{}
-	apiErrors := apihelper.ApiErrors{}
-	json.Unmarshal(body, &profileDTO)
-	json.Unmarshal(body, &apiErrors)
-
-	t.Log(profileDTO)
-	t.Log(apiErrors)
 
 	// test response
 	if resp.StatusCode != 200 {

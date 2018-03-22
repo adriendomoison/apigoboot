@@ -4,16 +4,15 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"github.com/adriendomoison/apigoboot/errorhandling/apihelper"
-	"github.com/adriendomoison/apigoboot/errorhandling/servicehelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/apihelper"
+	"github.com/adriendomoison/apigoboot/api-tool/errorhandling/servicehelper"
 	"github.com/adriendomoison/apigoboot/profile-micro-service/component/profile/rest"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
-// TODO make it "http://api.user.apigoboot/api/private-v1/user"
-var userBaseUrl = "http://user.api:4200/api/private-v1/user"
+var userBaseUrl = "http://api.user.apigoboot:4200/api/private-v1/user"
 
 func askUserServiceForUserId(email string) (rest.ResponseDTOUserInfo, *servicehelper.Error) {
 	resDTO, apiErrors, statusCode := callGetUserIdService(email)
