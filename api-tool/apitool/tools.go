@@ -13,6 +13,8 @@ import (
 	"time"
 )
 
+const Week = time.Hour * 24 * 7
+
 // RequestHeader is the object to send to the HttpRequestHandlers
 type RequestHeader struct {
 	URL           string

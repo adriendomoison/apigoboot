@@ -225,6 +225,7 @@ type RepoInterface interface {
 type Entity struct {
 	gorm.Model
 	PublicId          string \`gorm:\"UNIQUE;NOT NULL\"\`
+    UserId   uint   \`gorm:\"NOT NULL\"\`
 }
 
 // TableName allow to gives a specific name to the $1 table
@@ -251,7 +252,7 @@ func (s *service) GetResourceOwnerId(publicId string) (userId uint) {
 	if err != nil {
 		return 0
 	}
-	return entity.UserID
+	return entity.UserId
 }
 
 // createDTOFromEntity copy all data from an entity to a Response DTO

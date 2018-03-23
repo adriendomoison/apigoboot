@@ -8,8 +8,10 @@ import (
 	"gopkg.in/go-playground/validator.v8"
 	"net/http"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // ApiError interface for all API error messages
@@ -94,6 +96,40 @@ func GetBoolQueryParam(c *gin.Context, value *bool, queryParam string, defaultVa
 		*value = defaultValue
 	}
 	return true
+}
+
+// GetBoolQueryParam allow to retrieve a boolean query parameter.
+// It takes the gin contect as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
+func GetStringQueryParam(c *gin.Context, queryParam string, acceptedValues []string, defaultValue string) (string, bool) {
+	param := c.Query(queryParam)
+	if param != "" {
+		sort.Strings(acceptedValues)
+		i := sort.SearchStrings(acceptedValues, param)
+		if i < len(acceptedValues) && acceptedValues[i] == param {
+			return param, true
+		}
+		c.JSON(BuildRequestError(
+			errors.New("query parameter '" + queryParam + "' value should be a date with the format " + strings.Join(acceptedValues, ", ") + "(omit the key and default value '" + defaultValue + "' will be applied)"),
+		))
+		return "", false
+	}
+	return defaultValue, true
+}
+
+// GetBoolQueryParam allow to retrieve a boolean query parameter.
+// It takes the gin contect as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
+func GetDateQueryParam(c *gin.Context, queryParam string, dateLayout string, defaultValue string) (string, bool) {
+	date := c.Query(queryParam)
+	if date != "" {
+		if _, err := time.Parse(dateLayout, date); err != nil {
+			c.JSON(BuildRequestError(
+				errors.New("query parameter '" + queryParam + "' value should be a date with the format " + dateLayout + "(omit the key and default value '" + defaultValue + "' will be applied)"),
+			))
+			return "", false
+		}
+		return date, true
+	}
+	return defaultValue, true
 }
 
 // toSnakeCase change a string to it's snake case version
