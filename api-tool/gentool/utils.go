@@ -20,6 +20,7 @@ func GenerateRandomString(strLen int) string {
 	return string(result)
 }
 
+// GenerateCleanString take a string with symboles and extra spaces and return an alpha numerical string
 func GenerateCleanString(s string) string {
 	reg, err := regexp.Compile("[^a-zA-Z0-9]+")
 	if err != nil {

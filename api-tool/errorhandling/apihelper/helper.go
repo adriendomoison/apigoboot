@@ -70,7 +70,7 @@ func BuildResponseError(err *servicehelper.Error) (status int, apiErrors ApiErro
 	return int(err.Code), apiErrors
 }
 
-// BuildResponseError apply the right status to the http response and build the error JSON object
+// BuildChatfuelResponseError apply the right status to the http response and build the error JSON object for Chatfuel
 func BuildChatfuelResponseError(err *servicehelper.Error) (int, gin.H) {
 	var apiError ApiErrors
 	apiError.Errors = append(apiError.Errors, Error{
@@ -82,7 +82,7 @@ func BuildChatfuelResponseError(err *servicehelper.Error) (int, gin.H) {
 }
 
 // GetBoolQueryParam allow to retrieve a boolean query parameter.
-// It takes the gin contect as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
+// It takes the gin context as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
 func GetBoolQueryParam(c *gin.Context, value *bool, queryParam string, defaultValue bool) bool {
 	var err error
 	if c.Query(queryParam) != "" {
@@ -98,8 +98,9 @@ func GetBoolQueryParam(c *gin.Context, value *bool, queryParam string, defaultVa
 	return true
 }
 
-// GetBoolQueryParam allow to retrieve a boolean query parameter.
-// It takes the gin contect as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
+// GetStringQueryParam allow to retrieve a string query parameter.
+// It takes the gin context as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
+// the accepted values list will define if the value is valid or not
 func GetStringQueryParam(c *gin.Context, queryParam string, acceptedValues []string, defaultValue string) (string, bool) {
 	param := c.Query(queryParam)
 	if param != "" {
@@ -116,8 +117,9 @@ func GetStringQueryParam(c *gin.Context, queryParam string, acceptedValues []str
 	return defaultValue, true
 }
 
-// GetBoolQueryParam allow to retrieve a boolean query parameter.
-// It takes the gin contect as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
+// GetDateQueryParam allow to retrieve a date (as a string) query parameter.
+// It takes the gin context as param to build error if queryParam is not formatted correctly and a default value to set value if the parameter is optional and not set.
+// The dateLayout will define if the date is valid or not
 func GetDateQueryParam(c *gin.Context, queryParam string, dateLayout string, defaultValue string) (string, bool) {
 	date := c.Query(queryParam)
 	if date != "" {

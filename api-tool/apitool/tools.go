@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// Week define the amount of time in a week (time.Hour * 24 * 7)
 const Week = time.Hour * 24 * 7
 
 // RequestHeader is the object to send to the HttpRequestHandlers
@@ -36,7 +37,7 @@ func WaitForServerToStart(url string) bool {
 	return false
 }
 
-// Generate CORS config for router
+// DefaultCORSConfig Generate CORS config for router
 func DefaultCORSConfig() cors.Config {
 	CORSConfig := cors.DefaultConfig()
 	CORSConfig.AllowCredentials = true
@@ -106,6 +107,7 @@ func HttpRequestHandlerForUnitTesting(t *testing.T, requestHeader RequestHeader,
 	return resp, apiErrors
 }
 
+// ChatfuelError define the response body to return in case of error for requests made from Chatfuel
 type ChatfuelError struct {
 	SetAttributes apihelper.Error `json:"set_attributes"`
 }
